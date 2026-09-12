@@ -16,8 +16,8 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-  <!-- صفحة الترحيب (Welcome Modal) -->
-  <div id="welcomeScreen" style="display: flex;" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm items-center justify-center p-4">
+  <!-- صفحة الترحيب (تختفي نهائياً بضغطة زر واحدة) -->
+  <div id="welcomeScreen" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col items-center text-center">
       <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg shadow-indigo-500/30 mb-4">
         3ث
@@ -30,7 +30,6 @@
         تدريب عملي تفاعلي على مهارة القراءة والاستيعاب مع تصحيح فوري وشرح تفصيلي لأسباب الإجابة واستبعاد الاختيارات الخاطئة.
       </p>
 
-      <!-- بطاقة النطاق -->
       <div class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 my-5 flex items-center justify-between">
         <div class="text-right">
           <span class="text-[11px] text-slate-400 font-bold block">المجموعة المتاحة حالياً</span>
@@ -41,13 +40,13 @@
         </span>
       </div>
 
-      <button id="startBtn" type="button" onclick="document.getElementById('welcomeScreen').remove()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition active:scale-[0.98] cursor-pointer">
+      <button type="button" onclick="document.getElementById('welcomeScreen').remove()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition active:scale-[0.98] cursor-pointer">
         ابدأ التدريب الآن 🚀
       </button>
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- الهيدر -->
   <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -56,20 +55,19 @@
         </div>
         <div>
           <h1 class="font-bold text-base sm:text-lg leading-tight">تدريب قطع الفهم والتطبيق التفاعلي</h1>
-          <p class="text-xs text-indigo-200">القطع الحالية: من القطعة 1 إلى 10</p>
+          <p class="text-xs text-indigo-200">القطع الحالية: من 1 إلى 10</p>
         </div>
       </div>
       
-      <!-- Passage Selector Dropdown -->
       <div class="flex items-center gap-2">
         <label for="passageSelect" class="text-xs hidden sm:inline-block font-semibold">اختر القطعة:</label>
-        <select id="passageSelect" class="bg-indigo-800 text-white text-sm rounded-lg px-3 py-1.5 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-white">
+        <select id="passageSelect" onchange="loadPassage(this.value)" class="bg-indigo-800 text-white text-sm rounded-lg px-3 py-1.5 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-white">
         </select>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- الحاوية الأساسية -->
   <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
     
     <!-- عمود القطعة والمفردات -->
@@ -96,7 +94,7 @@
       </div>
     </section>
 
-    <!-- عمود الأسئلة والتحليل -->
+    <!-- عمود الأسئلة والتحليل الذكي -->
     <section class="lg:col-span-6 flex flex-col gap-4">
       
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
@@ -129,10 +127,10 @@
         </div>
 
         <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
-          <button id="prevBtn" type="button" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <button id="prevBtn" type="button" onclick="prevQuestion()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
             السابق
           </button>
-          <button id="nextBtn" type="button" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
+          <button id="nextBtn" type="button" onclick="nextQuestion()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
             التالي
           </button>
         </div>
@@ -147,7 +145,8 @@
         id: 1,
         title: "Passage 1: Role Models & Elephants",
         text: `We have learnt from modern psychology that nobody wants to be told what to do by someone else. We resist when someone tries to make us do something. Yet, we persist in trying to change others. If we want others to change their ways, telling them to do so will have little effect unless we are living examples of that behavior.
-        A team of researchers went to Africa to study the behavior of elephants. They came across a herd of elephants running wild, and destroying their environment. They discovered that these were all teenage male elephants. They had no adult role models to learn from. The researchers arranged to have some adult elephants brought in. In the beginning, there was no change and the teen elephants continued to run wild and fight with each other. However, after a few days the teen elephants began to settle down. Over time, they became well behaved and their wild actions subsided.
+
+A team of researchers went to Africa to study the behavior of elephants. They came across a herd of elephants running wild, and destroying their environment. They discovered that these were all teenage male elephants. They had no adult role models to learn from. The researchers arranged to have some adult elephants brought in. In the beginning, there was no change and the teen elephants continued to run wild and fight with each other. However, after a few days the teen elephants began to settle down. Over time, they became well behaved and their wild actions subsided.
 
 On their own, the teen elephants had no role models and did not know how to behave. Once adults were introduced into their group, the teens had role models and began to be disciplined. In the same way, parents teach children through loving discipline and by setting an example. Children do not believe in words alone but in what they see parents do. They copy their good and bad habits because that is their example. That is the only way to bring about change. If we want to see positive change in others and in our family, neighborhood, community, society, or country, then we need to set a good example.`,
         vocab: [
@@ -308,13 +307,13 @@ On their own, the teen elephants had no role models and did not know how to beha
       {
         id: 2,
         title: "Passage 2: A Digital Diet",
-        text: Technology is an important part of people's lives, but the time spent with digital devices needs to be balanced with other activities. A digital diet would help people limit screen time and reverse some bad habits from too much digital use. This balance could mean more time outside, more sleep, and longer attention spans. A digital diet would be worth the effort.
+        text: `Technology is an important part of people's lives, but the time spent with digital devices needs to be balanced with other activities. A digital diet would help people limit screen time and reverse some bad habits from too much digital use. This balance could mean more time outside, more sleep, and longer attention spans. A digital diet would be worth the effort.
 
 Young people depend on technology for almost everything, but too much technology can be bad. Everyone who uses digital devices needs to restrict the hours they spend with screens by spending more time outside or reading a book before they go to bed. Even though computers are still needed for homework, people would benefit from less screen time.
 
 Most people rely on technology to communicate with others through text and email, but too much time looking at a screen creates bad habits. Instead, everyone should try to go outside during their free time so that they can get better grades in school and develop their creativity. Although a digital diet would be hard at first, it would help people in the end.
 
-Although electronic devices can help people, they can also be bad for people's health. Digital overload should be replaced with a digital diet. Most people know that a food diet helps people get rid of poor eating habits, and the same is true with a digital diet. Going on a digital diet would prevent people from developing poor habits with their digital devices.,
+Although electronic devices can help people, they can also be bad for people's health. Digital overload should be replaced with a digital diet. Most people know that a food diet helps people get rid of poor eating habits, and the same is true with a digital diet. Going on a digital diet would prevent people from developing poor habits with their digital devices.`,
         vocab: [
           { en: "balance", ar: "توازن" },
           { en: "restrict", ar: "يحد / يقلل" },
@@ -431,7 +430,7 @@ Although electronic devices can help people, they can also be bad for people's h
                 c: "خطأ: السياق يتحدث عن الإفراط والمبالغة (too much)."
               }
             }
-            },
+          },
           {
             q: "7. Restricting the hours we spend with screens is hard at first for .....",
             options: [
@@ -473,11 +472,11 @@ Although electronic devices can help people, they can also be bad for people's h
       {
         id: 3,
         title: "Passage 3: Positivity and Good Health",
-        text: It's normal to feel a bit blue from time to time. However, studies show that negative emotions can harm the body. When you see red, your blood pressure is raised and you can suffer from headaches, sleep problems and digestive problems. However, what about positive feelings and attitudes? Until recently, scientists had not investigated whether there is a link between positive feelings and good health. Then, in a study that had followed more than 6,000 men and women aged 25 to 74 for 20 years, researchers found that positivity reduced the risk of heart disease.
+        text: `It's normal to feel a bit blue from time to time. However, studies show that negative emotions can harm the body. When you see red, your blood pressure is raised and you can suffer from headaches, sleep problems and digestive problems. However, what about positive feelings and attitudes? Until recently, scientists had not investigated whether there is a link between positive feelings and good health. Then, in a study that had followed more than 6,000 men and women aged 25 to 74 for 20 years, researchers found that positivity reduced the risk of heart disease.
 
 Other factors influencing health included a supportive network of family and friends, and an optimistic outlook on life. The research showed that children who were more able to stay focused on a task, and who had a more positive attitude to life at age seven, were usually in better health 30 years later. The study has been controversial. Some health professionals believe that bad lifestyle choices, such as smoking or lack of exercise, are the reason for heart disease and other illnesses. The researchers, while agreeing, raise the question: why are people making bad lifestyle decisions? Do more optimistic people make better and healthier lifestyle choices?
 
-The researchers appreciate that not everyone's personal circumstances and environment make it possible to live without worry. However, they believe that if we teach children to develop positive thinking, and to 'bounce back' after a setback, these qualities will improve their overall health in the future.,
+The researchers appreciate that not everyone's personal circumstances and environment make it possible to live without worry. However, they believe that if we teach children to develop positive thinking, and to 'bounce back' after a setback, these qualities will improve their overall health in the future.`,
         vocab: [
           { en: "blood pressure", ar: "ضغط الدم" },
           { en: "digestive", ar: "الهضم / هضمي" },
@@ -485,7 +484,7 @@ The researchers appreciate that not everyone's personal circumstances and enviro
           { en: "outlook", ar: "نظرة / أفق" },
           { en: "task", ar: "مهمة" },
           { en: "lifestyle", ar: "أسلوب معيشة" }
-  ],
+        ],
         questions: [
           {
             q: "1. Which of the following causes heart diseases?",
@@ -640,8 +639,7 @@ The researchers appreciate that not everyone's personal circumstances and enviro
 
 On touching the metal disk, a strange thing happened. I wasn't in the classroom. I was hovering in the air. I could see the whole town. I was a little nervous, but also pretty excited. I remembered the metal disk. I looked closely at the disk. On it were the words: "Floating through the air, like a balloon, your travels will not stop, until you reach the moon."
 
-Suddenly, I was standing on the moon. It was amazing! It looked different than Earth. No trees, water, wind, or houses. For each step I took I would bounce way up into the air. Every step I took left a huge footprint in the dust. I had to be careful not to jump into a crater.
-I was bounding over to something in the distance that looked very out of place. When I got there, I realized it was a flag. On the flag were the words: "To go to Earth, close your eyes and think of what you've learned."
+Suddenly, I was standing on the moon. It was amazing! It looked different than Earth. No trees, water, wind, or houses. For each step I took I would bounce way up into the air. Every step I took left a huge footprint in the dust. I had to be careful not to jump into a crater. I was bounding over to something in the distance that looked very out of place. When I got there, I realized it was a flag. On the flag were the words: "To go to Earth, close your eyes and think of what you've learned."
 
 I decided to close my eyes and think of the weather and other characteristics of the moon. When I opened my eyes I was sitting in my classroom. Miss Heba was turning on the lights because the video was over. I sat there wondering about what happened. I opened my hand to look at the disk, but it was gone! Was it just a dream?`,
         vocab: [
@@ -802,7 +800,7 @@ I decided to close my eyes and think of the weather and other characteristics of
       {
         id: 5,
         title: "Passage 5: How to Spot a Liar",
-        text: Psychologist Ekman made a study of how people act when they lie. They don't only want the hearer to believe what they are saying; but also to cover up what they are feeling such as guilt, fear, anger, pain, or even pleasure. By noticing the contradictions between their words and their behavior, Ekman found that he could catch them while lying.
+        text: `Psychologist Ekman made a study of how people act when they lie. They don't only want the hearer to believe what they are saying; but also to cover up what they are feeling such as guilt, fear, anger, pain, or even pleasure. By noticing the contradictions between their words and their behavior, Ekman found that he could catch them while lying.
 
 Ekman concludes that there are four kinds of behavior that can give a lie away: the liar's words, voice, body, and face. He says that liars try to control their words and face, since that's what the listener will be observing. So, "lie catchers" should observe the speaker's voice and body signals, which he may forget to control.
 
@@ -810,7 +808,7 @@ A common problem for liars is keeping their story straight. It's known that one 
 
 Liar's voice can also give him away. The voice is harder to control than words. When telling a lie, he may speak loudly or softly, speed up or slow down. This can be due to the emotion he's hiding. However, vocal changes like these aren't always signs of lying.
 
-Somebody's behaviors can be controlled, but others can't. When telling a lie, a person may swallow, sweat, or breathe faster. Nervous gestures often increase when a person is under stress. The liar may use a gesture that contradicts his words, such as nodding "yes" while saying "no.",
+Somebody's behaviors can be controlled, but others can't. When telling a lie, a person may swallow, sweat, or breathe faster. Nervous gestures often increase when a person is under stress. The liar may use a gesture that contradicts his words, such as nodding "yes" while saying "no."`,
         vocab: [
           { en: "guilt", ar: "ذنب" },
           { en: "contradictions", ar: "متناقضات" },
@@ -972,9 +970,9 @@ Somebody's behaviors can be controlled, but others can't. When telling a lie, a 
       {
         id: 6,
         title: "Passage 6: Role Models and Parents",
-        text: Parents are the most important models for growing children; in fact the first influences on them. First, parents are usually the earliest human contact the child has in the world. In the eyes of the child, parents are by far the most powerful people. They influence the child through nurturing him and providing his needs. In a word, his survival almost solely depends on them. Undoubtedly then, the child looks up to these prime models for the development of his character. Perhaps this explains some of the traditional sayings which suggest that the child takes after the parents.
+        text: `Parents are the most important models for growing children; in fact the first influences on them. First, parents are usually the earliest human contact the child has in the world. In the eyes of the child, parents are by far the most powerful people. They influence the child through nurturing him and providing his needs. In a word, his survival almost solely depends on them. Undoubtedly then, the child looks up to these prime models for the development of his character. Perhaps this explains some of the traditional sayings which suggest that the child takes after the parents.
 
-Take the expression, "a chip off the old block", for instance, which is often used to confirm the close similarity between the behaviour of the child and his parents'. It stands to reason that the child naturally picks up his traits, whether good or bad, from his parents. Although the child's parents are his earliest and most important models, he is exposed to many other potent influences: siblings, television, school, celebrities, social media and so on. The walls of boys' rooms, for example, are often covered with the pictures of their idols. But do your children emulate the behaviour of everyone? It is known that they do not imitate all the people they know in equal degrees. It is therefore important to understand the variables that determine the extent to which the child takes up the behaviour displayed by his models.,
+Take the expression, "a chip off the old block", for instance, which is often used to confirm the close similarity between the behaviour of the child and his parents'. It stands to reason that the child naturally picks up his traits, whether good or bad, from his parents. Although the child's parents are his earliest and most important models, he is exposed to many other potent influences: siblings, television, school, celebrities, social media and so on. The walls of boys' rooms, for example, are often covered with the pictures of their idols. But do your children emulate the behaviour of everyone? It is known that they do not imitate all the people they know in equal degrees. It is therefore important to understand the variables that determine the extent to which the child takes up the behaviour displayed by his models.`,
         vocab: [
           { en: "nurturing", ar: "تغذية / رعاية" },
           { en: "solely", ar: "بمفرده / فقط" },
@@ -1141,6 +1139,7 @@ Take the expression, "a chip off the old block", for instance, which is often us
 Have you experienced any vivid dreams? Social media and online forums are full of stories of vivid dreams. Experts are claiming that there is a lot of truth in this phenomenon. People are sleeping longer and this allows more time for dreaming. In addition, the more boring your life is, the more your night time brain activity tries to recompense and the more exciting your dreams become.
 
 Experts decline that dreams can predict events, but they can help us understand our feelings. The events in dreams are symbolic. For example, missing that train might indicate that you are feeling left behind, or that you are nervous. Walking on air shows your feeling of being impossible to be defeated. Dreaming of natural disasters show that you are feeling frightened by events out of your control.
+
 It is worthwhile to try and discover the meaning of your dreams, as this can help you understand your feelings. One way to do this is by association. If you dream about people, ask: what does this person mean to me? If you dream about birds think: do you love them or do they make you nervous? Some people claim they never dream; well, they do, but they just forget.`,
         vocab: [
           { en: "vivid", ar: "واضح / جلي" },
@@ -1295,7 +1294,7 @@ It is worthwhile to try and discover the meaning of your dreams, as this can hel
                 b: "خطأ: النص أوضح أن الكثيرين ينسون أحلامهم تماماً.",
                 c: "خطأ: لا يمكن للإنسان برمجة واختيار نوع أحلامه مسبقاً.",
                 d: "خطأ: بعض الأحلام كوابيس مخيفة كالكوارث الطبيعية."
-                }
+              }
             }
           }
         ]
@@ -1303,11 +1302,11 @@ It is worthwhile to try and discover the meaning of your dreams, as this can hel
       {
         id: 8,
         title: "Passage 8: The Discovery of Penicillin",
-        text: During the First World War, Fleming became an army doctor. When a soldier is wounded in a battle, a piece of his dirty clothing is carried deep into the wound by the bullet. The wound becomes septic and a disease spread through the body. Sometimes an arm or a leg has to be cut off or the man would die, not from the wound but from the poison in his body.
+        text: `During the First World War, Fleming became an army doctor. When a soldier is wounded in a battle, a piece of his dirty clothing is carried deep into the wound by the bullet. The wound becomes septic and a disease spread through the body. Sometimes an arm or a leg has to be cut off or the man would die, not from the wound but from the poison in his body.
 
 Fleming knew that microbes, which increased quickly, caused a disease. It was possible to kill them by washing the wound in antiseptic; this was done as soon as possible, but the soldiers still died in great numbers. Fleming worked for years, trying to find an antiseptic which would stop microbes from growing; but which wouldn't harm the blood cells, so that the body could fight the disease.
 
-One day he stopped to examine the glass dishes on which he had grown some microbes. In one dish, he was surprised to notice a greenish mould. That meant a tiny seed must have floated on the dish when the lid was off. Fleming made a careful examination. He found out a strange thing. Where the greenish mould was growing, the disease microbes had disappeared. He began to grow enough of the mould to make from it a clear liquid, which tests showed could kill microbes or stop them in both animals and humans without harming their white blood cells. He called the liquid penicillin.,
+One day he stopped to examine the glass dishes on which he had grown some microbes. In one dish, he was surprised to notice a greenish mould. That meant a tiny seed must have floated on the dish when the lid was off. Fleming made a careful examination. He found out a strange thing. Where the greenish mould was growing, the disease microbes had disappeared. He began to grow enough of the mould to make from it a clear liquid, which tests showed could kill microbes or stop them in both animals and humans without harming their white blood cells. He called the liquid penicillin.`,
         vocab: [
           { en: "septic", ar: "ملوث / مصاب بالعدوى" },
           { en: "antiseptic", ar: "معقم / مطهر" },
@@ -1364,7 +1363,7 @@ One day he stopped to examine the glass dishes on which he had grown some microb
             correct: "d",
             aiAnalysis: {
               correct: "القطعة ترصد قصة جهود العالم فليمنج حتى اكتشافه التاريخي لعقار البنسلين المنقذ للبشرية (The Discovery of Penicillin).",
-    distractors: {
+              distractors: {
                 a: "خطأ: الحرب العالمية كانت الإطار الزمني لبداية المشكلة فقط.",
                 b: "خطأ: كرات الدم البيضاء عنصر مناعي ذكر في سياق التجارب.",
                 c: "خطأ: حياة الجنود لم تكن المحور العلمي للمقال."
@@ -1466,11 +1465,11 @@ One day he stopped to examine the glass dishes on which he had grown some microb
       {
         id: 9,
         title: "Passage 9: Identical Twins",
-        text: You may take it for granted that you are different from everybody else on Earth. Identical twins are fascinating because they challenge this idea: they are unique people, of course, but they are also similar to each other - and not only in terms of appearance. They often share opinions, habits, and personality traits. Identical twins are rare, happening in about three out of every 1,000 births.
+        text: `You may take it for granted that you are different from everybody else on Earth. Identical twins are fascinating because they challenge this idea: they are unique people, of course, but they are also similar to each other - and not only in terms of appearance. They often share opinions, habits, and personality traits. Identical twins are rare, happening in about three out of every 1,000 births.
 
 Although there may be tiny differences in physical appearances between identical twins, which allow family and close friends to tell them apart, they have exactly the same DNA. For most scientists, it's the nonphysical similarities between identical twins that are the most interesting. By studying identical twins who've been raised by different families, researchers wanted to determine which personality traits are inherited and which are learned from the environment.
 
-The Minnesota Twin Study provides information about how our environment and genes work together to influence everything from attitudes and abilities to job selection and health. Identical twins Jim Lewis and Jim Springer were only four weeks old when they were taken in by different adoptive families. From there, their lives diverged until they finally met again at the age of 39. The similarities the twins shared not only amazed them, but also amazed researchers. Both twins were given the same name was a coincidence. But there's more. As youngsters, each Jim had a dog named "Toy". Both Jims had at one time held part-time jobs as officers. They drove the same type of car. Both were fingernail biters and suffered from constant headaches.,
+The Minnesota Twin Study provides information about how our environment and genes work together to influence everything from attitudes and abilities to job selection and health. Identical twins Jim Lewis and Jim Springer were only four weeks old when they were taken in by different adoptive families. From there, their lives diverged until they finally met again at the age of 39. The similarities the twins shared not only amazed them, but also amazed researchers. Both twins were given the same name was a coincidence. But there's more. As youngsters, each Jim had a dog named "Toy". Both Jims had at one time held part-time jobs as officers. They drove the same type of car. Both were fingernail biters and suffered from constant headaches.`,
         vocab: [
           { en: "inherit", ar: "يرث" },
           { en: "determine", ar: "يحدد / يقرر" },
@@ -1636,8 +1635,7 @@ The Minnesota Twin Study provides information about how our environment and gene
 
 I went into the restaurant, which was already crowded, and ordered my meal. While I was waiting for the soup to arrive, I looked around to see if I knew anyone in the restaurant. It was then that I noticed that a man sitting at a corner table near the door kept glancing in my direction, as if he knew me. I certainly did not know him, for I never forget a face. I could see that he was keeping an eye on me. When the waiter brought my soup, the man was clearly puzzled by the familiar way in which the waiter and I addressed each other. He became even more puzzled as time went on and it grew more and more obvious that I was well known in the restaurant. Eventually he got up and went into the kitchen. After a few minutes he came out again, paid his bill and left without another glance in my direction.
 
-When I had finished and was about to pay my bill, I called the owner of the restaurant over and asked him what the man had wanted. The owner said, "That man was a detective. He followed you here because he thought you were a man he was looking for. When he came into the kitchen, he showed me a photograph of the wanted man.
-He certainly looked like you! Of course, since we know you here, I was able to convince him that he had made a mistake." "It is lucky I came to a restaurant where I am known," I said, "Otherwise I might have been arrested!"`,
+When I had finished and was about to pay my bill, I called the owner of the restaurant over and asked him what the man had wanted. The owner said, "That man was a detective. He followed you here because he thought you were a man he was looking for. When he came into the kitchen, he showed me a photograph of the wanted man. He certainly looked like you! Of course, since we know you here, I was able to convince him that he had made a mistake." "It is lucky I came to a restaurant where I am known," I said, "Otherwise I might have been arrested!"`,
         vocab: [
           { en: "puzzled", ar: "متحير / مرتبك" },
           { en: "familiar", ar: "مألوف / معتاد" },
@@ -1803,53 +1801,31 @@ He certainly looked like you! Of course, since we know you here, I was able to c
     let currentQuestionIndex = 0;
     let userAnswers = {};
     let score = 0;
-    const welcomeScreen = document.getElementById("welcomeScreen");
-    const startBtn = document.getElementById("startBtn");
-    const passageSelect = document.getElementById("passageSelect");
-    const passageBadge = document.getElementById("passageBadge");
-    const passageText = document.getElementById("passageText");
-    const vocabContainer = document.getElementById("vocabContainer");
-    const currentQDisplay = document.getElementById("currentQDisplay");
-    const progressBar = document.getElementById("progressBar");
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    const qText = document.getElementById("qText");
-    const optionsContainer = document.getElementById("optionsContainer");
-    const aiExplanation = document.getElementById("aiExplanation");
-    const explanationTitle = document.getElementById("explanationTitle");
-    const explanationBody = document.getElementById("explanationBody");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-
-    function startTraining() {
-      welcomeScreen.style.setProperty('display', 'none', 'important');
-    }
-
-    startBtn.addEventListener('click', startTraining);
 
     function initDropdown() {
-      passageSelect.innerHTML = passagesData.map((p, idx) => 
+      const sel = document.getElementById("passageSelect");
+      sel.innerHTML = passagesData.map((p, idx) => `
         <option value="${idx}">القطعة ${p.id}: ${p.title.split(':')[1] || ''}</option>
-      ).join("");
-      passageSelect.addEventListener('change', (e) => loadPassage(parseInt(e.target.value)));
+      `).join("");
     }
 
     function loadPassage(idx) {
-      currentPassageIndex = idx;
+      currentPassageIndex = parseInt(idx);
       currentQuestionIndex = 0;
       userAnswers = {};
       score = 0;
-      scoreDisplay.textContent = "0";
+      document.getElementById("scoreDisplay").textContent = "0";
 
-      const p = passagesData[idx];
-      passageBadge.textContent = القطعة ${p.id};
-      passageText.innerHTML = p.text.split('\n\n').map(par => <p class="mb-3">${par}</p>).join("");
+      const p = passagesData[currentPassageIndex];
+      document.getElementById("passageBadge").textContent = `القطعة ${p.id}`;
+      document.getElementById("passageText").innerHTML = p.text.split("\n\n").map(par => `<p class="mb-3">${par}</p>`).join("");
 
-      vocabContainer.innerHTML = p.vocab.map(v => 
+      document.getElementById("vocabContainer").innerHTML = p.vocab.map(v => `
         <div class="bg-indigo-50/60 p-2 rounded-lg border border-indigo-100 flex flex-col">
           <span class="font-bold text-indigo-900 en-text text-xs">${v.en}</span>
           <span class="text-slate-600 text-[11px] font-medium mt-0.5">${v.ar}</span>
         </div>
-      ).join("");
+      `).join("");
 
       loadQuestion(0);
     }
@@ -1859,26 +1835,27 @@ He certainly looked like you! Of course, since we know you here, I was able to c
       const p = passagesData[currentPassageIndex];
       const qData = p.questions[qIdx];
 
-      currentQDisplay.textContent = ${qIdx + 1} من ${p.questions.length};
+      document.getElementById("currentQDisplay").textContent = `${qIdx + 1} من ${p.questions.length}`;
       const progressPercent = ((qIdx + 1) / p.questions.length) * 100;
-      progressBar.style.width = ${progressPercent}%;
+      document.getElementById("progressBar").style.width = `${progressPercent}%`;
 
-      qText.textContent = qData.q;
+      document.getElementById("qText").textContent = qData.q;
 
       const answeredState = userAnswers[qIdx];
+      const optContainer = document.getElementById("optionsContainer");
 
-      optionsContainer.innerHTML = qData.options.map(opt => {
-        let btnClasses = "w-full text-left p-3.5 rounded-xl border border-slate-200 text-sm font-medium transition duration-150 flex items-center justify-between";
+      optContainer.innerHTML = qData.options.map(opt => {
+        let btnClasses = "w-full text-left p-3.5 rounded-xl border border-slate-200 text-sm font-medium transition duration-150 flex items-center justify-between ";
         
         if (!answeredState) {
-          btnClasses += " hover:bg-indigo-50/70 hover:border-indigo-300 active:scale-[0.99] bg-white";
+          btnClasses += "hover:bg-indigo-50/70 hover:border-indigo-300 active:scale-[0.99] bg-white cursor-pointer";
         } else {
           if (opt.key === qData.correct) {
-            btnClasses += " bg-emerald-50 border-emerald-500 text-emerald-900 font-bold";
+            btnClasses += "bg-emerald-50 border-emerald-500 text-emerald-900 font-bold";
           } else if (opt.key === answeredState.chosenKey) {
-            btnClasses += " bg-rose-50 border-rose-400 text-rose-900 font-bold";
+            btnClasses += "bg-rose-50 border-rose-400 text-rose-900 font-bold";
           } else {
-            btnClasses += " bg-slate-50 border-slate-200 text-slate-400 opacity-60";
+            btnClasses += "bg-slate-50 border-slate-200 text-slate-400 opacity-60";
           }
         }
 
@@ -1888,69 +1865,70 @@ He certainly looked like you! Of course, since we know you here, I was able to c
           <button onclick="handleSelectOption('${opt.key}')" ${disabledAttr} class="${btnClasses}">
             <div class="flex items-center gap-3">
               <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs font-bold text-slate-500 ${answeredState && opt.key === qData.correct ? 'border-emerald-500 text-emerald-600 bg-emerald-100' : ''}">
-              ${opt.key.toUpperCase()}
+                ${opt.key.toUpperCase()}
               </span>
               <span>${opt.text}</span>
             </div>
             ${answeredState && opt.key === qData.correct ? '<span class="text-emerald-600 font-bold text-xs">✓ صحيح</span>' : ''}
             ${answeredState && opt.key === answeredState.chosenKey && !answeredState.isCorrect ? '<span class="text-rose-500 font-bold text-xs">✕ اختيارك</span>' : ''}
           </button>
-        ;
+        `;
       }).join("");
 
+      const expl = document.getElementById("aiExplanation");
       if (answeredState) {
         showExplanation(qData, answeredState);
       } else {
-        aiExplanation.style.display = "none";
+        expl.style.display = "none";
       }
 
-      prevBtn.disabled = qIdx === 0;
-      nextBtn.textContent = qIdx === p.questions.length - 1 ? "إنهاء القطعة" : "التالي";
+      document.getElementById("prevBtn").disabled = (qIdx === 0);
+      document.getElementById("nextBtn").textContent = (qIdx === p.questions.length - 1) ? "إنهاء القطعة" : "التالي";
     }
 
     function handleSelectOption(chosenKey) {
       const p = passagesData[currentPassageIndex];
       const qData = p.questions[currentQuestionIndex];
-      const isCorrect = chosenKey === qData.correct;
+      const isCorrect = (chosenKey === qData.correct);
 
       if (isCorrect) {
         score++;
-        scoreDisplay.textContent = score;
+        document.getElementById("scoreDisplay").textContent = score;
       }
 
-      userAnswers[currentQuestionIndex] = {
-        chosenKey,
-        isCorrect
-      };
-
+      userAnswers[currentQuestionIndex] = { chosenKey, isCorrect };
       loadQuestion(currentQuestionIndex);
     }
 
     function showExplanation(qData, answerState) {
-      aiExplanation.style.display = "block";
+      const expl = document.getElementById("aiExplanation");
+      const title = document.getElementById("explanationTitle");
+      const body = document.getElementById("explanationBody");
+
+      expl.style.display = "block";
 
       if (answerState.isCorrect) {
-        aiExplanation.className = "mt-5 p-4 rounded-xl border border-emerald-200 bg-emerald-50/50";
-        explanationTitle.className = "text-sm font-bold text-emerald-800";
-        explanationTitle.innerHTML = "✨ إجابة صحيحة وموفقة!";
+        expl.className = "mt-5 p-4 rounded-xl border border-emerald-200 bg-emerald-50/50";
+        title.className = "text-sm font-bold text-emerald-800";
+        title.innerHTML = "✨ إجابة صحيحة وموفقة!";
       } else {
-        aiExplanation.className = "mt-5 p-4 rounded-xl border border-amber-200 bg-amber-50/50";
-        explanationTitle.className = "text-sm font-bold text-amber-900";
-        explanationTitle.innerHTML = "⚠️ إجابة غير دقيقة! إليك التفنيد الصحيح:";
+        expl.className = "mt-5 p-4 rounded-xl border border-amber-200 bg-amber-50/50";
+        title.className = "text-sm font-bold text-amber-900";
+        title.innerHTML = "⚠️ إجابة غير دقيقة! إليك التفنيد الصحيح:";
       }
 
       let distractorsHtml = "";
       for (const [key, reason] of Object.entries(qData.aiAnalysis.distractors)) {
         const isUserMistake = (key === answerState.chosenKey);
-        distractorsHtml += 
+        distractorsHtml += `
           <div class="p-2 rounded-lg text-[11px] ${isUserMistake ? 'bg-rose-100/70 border border-rose-300 font-semibold text-rose-900' : 'bg-white/80 text-slate-600 border border-slate-200'}">
             <span class="font-bold uppercase tracking-wide">الخيار (${key}):</span> ${reason}
             ${isUserMistake ? ' <span class="text-rose-600 font-bold underline">(هذا هو الخيار الذي حددته)</span>' : ''}
           </div>
-        ;
+        `;
       }
 
-      explanationBody.innerHTML = 
+      body.innerHTML = `
         <div class="p-2.5 rounded-lg bg-white border border-slate-200">
           <p class="text-emerald-800 font-bold mb-1 text-xs">💡 لماذا الاختيار (${qData.correct.toUpperCase()}) هو الصحيح؟</p>
           <p class="text-slate-700 text-xs">${qData.aiAnalysis.correct}</p>
@@ -1959,23 +1937,23 @@ He certainly looked like you! Of course, since we know you here, I was able to c
           <p class="font-bold text-slate-700 text-xs">تحليل الخيارات الخاطئة ولماذا استبعدناها:</p>
           ${distractorsHtml}
         </div>
-      ;
+      `;
     }
 
-    prevBtn.addEventListener('click', () => {
+    function prevQuestion() {
       if (currentQuestionIndex > 0) loadQuestion(currentQuestionIndex - 1);
-    });
+    }
 
-    nextBtn.addEventListener('click', () => {
+    function nextQuestion() {
       const p = passagesData[currentPassageIndex];
       if (currentQuestionIndex < p.questions.length - 1) {
         loadQuestion(currentQuestionIndex + 1);
       } else {
-        alert(أحسنت! أكملت حل القطعة.\nالدرجة: ${score} من ${p.questions.length}`);
+        alert(`أحسنت! أكملت حل القطعة.\nالدرجة: ${score} من ${p.questions.length}`);
       }
-    });
+    }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener("DOMContentLoaded", () => {
       initDropdown();
       loadPassage(0);
     });
