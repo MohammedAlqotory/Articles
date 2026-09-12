@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة التدريب على قطع الفهم - ثانوية عامة 2027</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Cairo', sans-serif; }
+    .en-text { font-family: 'Inter', sans-serif; direction: ltr; text-align: left; }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: #f1f5f9; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- صفحة الترحيب (Welcome Modal / Hero Screen) -->
+  <div id="welcomeScreen" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col items-center text-center transform transition-all animate-in fade-in zoom-in duration-300">
+      <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg shadow-indigo-500/30 mb-4">
+        3ث
+      </div>
+      <span class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full border border-indigo-100 mb-2">
+        دفعة الثانوية العامة 2027
+      </span>
+      <h2 class="text-2xl font-black text-slate-900 mt-1">مرحباً بكِ في منصة قطع الفهم</h2>
+      <p class="text-xs sm:text-sm text-slate-500 mt-2 leading-relaxed">
+        تدريب عملي تفاعلي على مهارة القراءة والاستيعاب مع تصحيح ذكي فوري وشرح أسباب الإجابة واستبعاد الاختيارات الخاطئة.
+      </p>
+
+      <!-- بطاقة تحديد نطاق القطع المتاحة -->
+      <div class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 my-5 flex items-center justify-between">
+        <div class="text-right">
+          <span class="text-[11px] text-slate-400 font-bold block">المجموعة المتاحة حالياً</span>
+          <span class="text-sm font-extrabold text-indigo-900">القطع من 1 إلى 10</span>
+        </div>
+        <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1.5 rounded-xl">
+          10 قطع كاملة
+        </span>
+      </div>
+
+      <button onclick="startTraining()" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition active:scale-[0.98]">
+        ابدأ التدريب الآن 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-white text-indigo-700 font-extrabold w-10 h-10 rounded-xl flex items-center justify-center shadow-inner text-lg">
+          3ث
+        </div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg leading-tight">تدريب قطع الفهم والتطبيق التفاعلي</h1>
+          <p class="text-xs text-indigo-200">القطع الحالية: من القطعة 1 إلى 10</p>
+        </div>
+      </div>
+      
+      <!-- Passage Selector Dropdown -->
+      <div class="flex items-center gap-2">
+        <label for="passageSelect" class="text-xs hidden sm:inline-block font-semibold">اختر القطعة:</label>
+        <select id="passageSelect" onchange="changePassage(this.value)" class="bg-indigo-800 text-white text-sm rounded-lg px-3 py-1.5 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-white">
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- عمود القطعة والمفردات -->
+    <section class="lg:col-span-6 flex flex-col gap-4">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex-1 flex flex-col">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+          <span id="passageBadge" class="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full">القطعة</span>
+          <span class="text-xs text-slate-400 font-medium">Read carefully & answer below</span>
+        </div>
+        
+        <div class="mt-4 en-text text-slate-700 text-base leading-relaxed overflow-y-auto max-h-[50vh] lg:max-h-[62vh] pr-2 scrollbar-thin select-text" id="passageText">
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-100">
+          <details class="group cursor-pointer">
+            <summary class="flex justify-between items-center text-xs font-bold text-indigo-600 select-none">
+              <span>📖 جدول الكلمات المساعدة (Helping Vocabulary)</span>
+              <span class="transition group-open:rotate-180">▼</span>
+            </summary>
+            <div id="vocabContainer" class="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- عمود الأسئلة والتحليل الذكي -->
+    <section class="lg:col-span-6 flex flex-col gap-4">
+      
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-600">السؤال:</span>
+          <span id="currentQDisplay" class="text-xs font-black text-indigo-600">1 من 8</span>
+        </div>
+        <div class="flex-1 mx-4 bg-slate-100 h-2.5 rounded-full overflow-hidden">
+          <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-300"></div>
+        </div>
+        <div class="text-xs font-bold">
+          النتيجة: <span id="scoreDisplay" class="text-emerald-600 font-extrabold">0</span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex-1 flex flex-col">
+        <div class="mb-4">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Comprehension Question</span>
+          <h2 id="qText" class="en-text text-base sm:text-lg font-bold text-slate-900 mt-1"></h2>
+        </div>
+
+        <div id="optionsContainer" class="flex flex-col gap-2.5 en-text"></div>
+
+        <div id="aiExplanation" class="mt-5 p-4 rounded-xl hidden border transition-all">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">💡</span>
+            <h4 class="text-sm font-bold" id="explanationTitle">التحليل الذكي للإجابة</h4>
+          </div>
+          <div id="explanationBody" class="text-xs leading-relaxed text-slate-700 space-y-2"></div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+          <button id="prevBtn" onclick="prevQuestion()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+            السابق
+          </button>
+          <button id="nextBtn" onclick="nextQuestion()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
+            التالي
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const passagesData = [
+      {
+        id: 1,
+        title: "Passage 1: Role Models & Elephants",
+        text: `We have learnt from modern psychology that nobody wants to be told what to do by someone else. We resist when someone tries to make us do something. Yet, we persist in trying to change others. If we want others to change their ways, telling them to do so will have little effect unless we are living examples of that behavior.
+
+A team of researchers went to Africa to study the behavior of elephants. They came across a herd of elephants running wild, and destroying their environment. They discovered that these were all teenage male elephants. They had no adult role models to learn from. The researchers arranged to have some adult elephants brought in. In the beginning, there was no change and the teen elephants continued to run wild and fight with each other. However, after a few days the teen elephants began to settle down. Over time, they became well behaved and their wild actions subsided.
+
+On their own, the teen elephants had no role models and did not know how to behave. Once adults were introduced into their group, the teens had role models and began to be disciplined. In the same way, parents teach children through loving discipline and by setting an example. Children do not believe in words alone but in what they see parents do. They copy their good and bad habits because that is their example. That is the only way to bring about change. If we want to see positive change in others and in our family, neighborhood, community, society, or country, then we need to set a good example.`,
+        vocab: [
+          { en: "resist", ar: "يقاوم" },
+          { en: "discipline", ar: "انضباط / نظام" },
+          { en: "subside", ar: "ينحسر / يتراجع" },
+          { en: "settle down", ar: "يستقر / يهدأ" },
+          { en: "community", ar: "مجتمع" },
+          { en: "teenage", ar: "مراهق" }
+        ],
+        questions: [
+          {
+            q: "1. The best title for the passage could be",
+            options: [
+              { key: "a", text: "How elephants live." },
+              { key: "b", text: "Be the change you want to see in others." },
+              { key: "c", text: "How to copy others' actions." },
+              { key: "d", text: "The value of helping others." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "القطعة تركز بشكل رئيسي على أن التغيير الحقيقي يبدأ بتقديم القدوة الحسنة للآخرين (Be the change you want to see in others)، وقصة الأفيال مجرد مثال توضيحي لهذه الفكرة.",
+              distractors: {
+                a: "خطأ: قصة الأفيال كانت نموذجاً لإثبات أثر القدوة وليست دراسة عامة عن حياة الأفيال.",
+                c: "خطأ: النص لا يشرح كيفية تقليد أفعال الناس عموماً.",
+                d: "خطأ: الفكرة ليست تقديم المساعدة الخيرية، بل القيادة بالقدوة الصالحة."
+              }
+            }
+          },
+          {
+            q: "2. According to the passage, people don't like to be told",
+            options: [
+              { key: "a", text: "how one should behave" },
+              { key: "b", text: "how to help elephants" },
+              { key: "c", text: "how to talk" },
+              { key: "d", text: "to argue" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "النص ينص في الجملة الأولى: 'nobody wants to be told what to do by someone else' أي أن الناس تنفر من إملاء السلوكيات والأوامر عليها.",
+              distractors: {
+                b: "خطأ: مساعدة الأفيال تجربة علمية وليست موجهة للناس كأوامر.",
+                c: "خطأ: النص تحدث عن الأفعال والسلوك عامة وليس طريقة الكلام فقط.",
+                d: "خطأ: لم يذكر النص أن الناس تكره أن يُطلب منها الجدال."
+              }
+            }
+          },
+          {
+            q: "3. The most important benefit of having a good role model for the teens is ....",
+            options: [
+              { key: "a", text: "It helps them to be disciplined" },
+              { key: "b", text: "To be successful student" },
+              { key: "c", text: "To earn respect" },
+              { key: "d", text: "To secure good position in school and colleges." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "مذكور مباشرة: 'Once adults were introduced into their group, the teens had role models and began to be disciplined'.",
+              distractors: {
+                b: "خطأ: لم تتناول القطعة مسألة التفوق الدراسي للطلاب.",
+                c: "خطأ: كسب الاحترام لم يُذكر كأثر مباشر ورئيسي للقدوة في القطعة.",
+                d: "خطأ: لم يذكر النص أي تفاصيل تخص القبول في الكليات أو المدارس."
+              }
+            }
+          },
+          {
+            q: "4. The team observed that the reason of strange behaviour of the Male elephant is that they",
+            options: [
+              { key: "a", text: "always want to have fun" },
+              { key: "b", text: "were free to behave" },
+              { key: "c", text: "lived in the jungle" },
+              { key: "d", text: "lacked a role model." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "ورد في القطعة: 'They discovered that these were all teenage male elephants. They had no adult role models to learn from.'",
+              distractors: {
+                a: "خطأ: لم يكن سلوكهم رغبة في المرح بل تخريباً وعدوانية بسبب غياب الموجهين.",
+                b: "خطأ: الحرية ليست العلة المباشرة بل غياب الكبار الذين يعلمونهم السلوك القويم.",
+                c: "خطأ: الغابة هي بيئتهم الطبيعية ولا تفسر سلوكهم الشاذ."
+              }
+            }
+          },
+          {
+            q: "5. Teens follow their role model because-",
+            options: [
+              { key: "a", text: "Teens have lots of free time" },
+              { key: "b", text: "Modelling is a good career" },
+              { key: "c", text: "They copy the habits of their model" },
+              { key: "d", text: "Teens want to be famous" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "ذكرت القطعة: 'Children do not believe in words alone but in what they see parents do. They copy their good and bad habits because that is their example.'",
+              distractors: {
+                a: "خطأ: وقت الفراغ ليس السبب النفسي لمحاكاة القدوة.",
+                b: "خطأ: كلمة Model هنا تعني القدوة وليس مهنة عروض الأزياء.",
+                d: "خطأ: الرغبة في الشهرة لم تكن دافع التقليد المذكور في النص."
+              }
+            }
+          },
+          {
+            q: "6. Good role models lead by examples because",
+            options: [
+              { key: "a", text: "No one understands examples" },
+              { key: "b", text: "They want to avoid punishment." },
+              { key: "c", text: "We all love to see action movies" },
+              { key: "d", text: "Teens understand examples easily." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "الأفعال والنماذج العملية يسهل فهمها واستيعابها ومحاكاتها مقارنة بالنصائح الشفهية المجردة.",
+              distractors: {
+                a: "خطأ: الجميع يفهم الأمثلة العملية بسهولة.",
+                b: "خطأ: القدوة تقدم النموذج بدافع التوجيه والإصلاح وليس لتجنب العقاب.",
+                c: "خطأ: أفلام الأكشن خارج سياق الفكرة تماماً."
+              }
+            }
+          },
+          {
+            q: "7. The underlined word 'subsided' is closet in meaning to",
+            options: [
+              { key: "a", text: "improve" },
+              { key: "b", text: "decrease" },
+              { key: "c", text: "develop" },
+              { key: "d", text: "repair" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "فعل 'subside' يعني يهدأ أو يقل ويتراجع في الحدة (their wild actions subsided = أفعالهم العنيفة تراجعت وقلت)، وأقرب مرادف هو decrease.",
+              distractors: {
+                a: "خطأ: improve تعني يتحسن، وأفعالهم العدوانية خمدت ولم تتحسن.",
+                c: "خطأ: develop تعني يتطور أو ينمو وهو عكس سياق الهدوء.",
+                d: "خطأ: repair تعني يصلح عطلاً."
+              }
+            }
+          },
+          {
+            q: "8. We infer from the passage that teens",
+            options: [
+              { key: "a", text: "copy good habits only." },
+              { key: "b", text: "copy both good and bad habits." },
+              { key: "c", text: "copy bad habits only." },
+              { key: "d", text: "can behave well without role models." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "القطعة تؤكد صراحة: 'They copy their good and bad habits because that is their example.' فالأبناء يقلدون كل ما يرونه في قدوتهم.",
+              distractors: {
+                a: "خطأ: النص وضح أنهم يمتصون العادات السيئة أيضاً.",
+                c: "خطأ: يقلدون الصالح أيضاً إذا رأوه ممارساً أمامهم.",
+                d: "خطأ: الأفيال والمراهقون تصرفوا بعنف وفوضى عند غياب القدوة."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Passage 2: A Digital Diet",
+        text: `Technology is an important part of people's lives, but the time spent with digital devices needs to be balanced with other activities. A digital diet would help people limit screen time and reverse some bad habits from too much digital use. This balance could mean more time outside, more sleep, and longer attention spans. A digital diet would be worth the effort.
+
+Young people depend on technology for almost everything, but too much technology can be bad. Everyone who uses digital devices needs to restrict the hours they spend with screens by spending more time outside or reading a book before they go to bed. Even though computers are still needed for homework, people would benefit from less screen time.
+
+Most people rely on technology to communicate with others through text and email, but too much time looking at a screen creates bad habits. Instead, everyone should try to go outside during their free time so that they can get better grades in school and develop their creativity. Although a digital diet would be hard at first, it would help people in the end.
+
+Although electronic devices can help people, they can also be bad for people's health. Digital overload should be replaced with a digital diet. Most people know that a food diet helps people get rid of poor eating habits, and the same is true with a digital diet. Going on a digital diet would prevent people from developing poor habits with their digital devices.`,
+        vocab: [
+          { en: "balance", ar: "توازن" },
+          { en: "restrict", ar: "يحد / يقلل" },
+          { en: "reverse", ar: "يعكس / يقلب" },
+          { en: "span", ar: "مدى / مدة" },
+          { en: "creativity", ar: "إبداع" },
+          { en: "overload", ar: "حمل زائد" }
+        ],
+        questions: [
+          {
+            q: "1. The best title for this passage could be",
+            options: [
+              { key: "a", text: "New technology" },
+              { key: "b", text: "Electronic devices" },
+              { key: "c", text: "The internet" },
+              { key: "d", text: "A digital diet" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "موضوع القطعة بالكامل يدور حول فكرة 'الحمية الرقمية' (A digital diet) وأهميتها لإعادة التوازن والتحكم في وقت الشاشات.",
+              distractors: {
+                a: "خطأ: النص لا يستعرض تقنيات حديثة.",
+                b: "خطأ: الأجهزة وسيلة، بينما الفكرة الرئيسية هي ترشيد التعامل معها.",
+                c: "خطأ: الإنترنت عنصر واحد ضمن الاستخدام العام للأجهزة."
+              }
+            }
+          },
+          {
+            q: "2. The writer advises us to",
+            options: [
+              { key: "a", text: "sleep early" },
+              { key: "b", text: "spend time outside" },
+              { key: "c", text: "balance our times online" },
+              { key: "d", text: "avoid looking at the screen" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "نصيحة الكاتب المركزية هي تحقيق التوازن 'needs to be balanced with other activities' في قضاء الوقت أمام الأجهزة.",
+              distractors: {
+                a: "خطأ: النوم أكثر هو نتيجة ثانوية للحد من الأجهزة وليس نصيحة الكاتب الجامعة.",
+                b: "خطأ: الخروج نشاط مقترح لكنه ليس الرسالة الشاملة للنص.",
+                d: "خطأ: الكاتب لا يطالب بالانقطاع التام عن الشاشات، بل الاعتدال."
+              }
+            }
+          },
+          {
+            q: "3. Which one of the following is a useful activity?",
+            options: [
+              { key: "a", text: "Reading a book" },
+              { key: "b", text: "Surfing webpages" },
+              { key: "c", text: "Writing a comment on a post" },
+              { key: "d", text: "Chatting with friends" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "أشار الكاتب صراحة إلى قراءة كتاب كبديل صحي ومفيد: 'spending more time outside or reading a book before they go to bed.'",
+              distractors: {
+                b: "خطأ: تصفح الويب يزيد من وقت الشاشة المفرط.",
+                c: "خطأ: كتابة التعليقات تتطلب البقاء أمام الشاشة.",
+                d: "خطأ: المحادثات الرقمية تزيد الإجهاد الذهني المرتبط بالشاشات."
+              }
+            }
+          },
+          {
+            q: "4. Which of the following is a form of modern means of communication?",
+            options: [
+              { key: "a", text: "letters" },
+              { key: "b", text: "e-mails" },
+              { key: "c", text: "faxes" },
+              { key: "d", text: "telegrams" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "البريد الإلكتروني (e-mails) هو الوسيلة الحديثة المذكورة في النص مقارنة بالوسائل التقليدية القديمة.",
+              distractors: {
+                a: "خطأ: الخطابات الورقية وسيلة تقليدية قديمة.",
+                c: "خطأ: الفاكس وسيلة مكتبية قديمة.",
+                d: "خطأ: التلغراف وسيلة سلكية تاريخية."
+              }
+            }
+          },
+          {
+            q: "5. We infer that the writer is",
+            options: [
+              { key: "a", text: "against using technology" },
+              { key: "b", text: "for using technology" },
+              { key: "c", text: "with using technology with limits" },
+              { key: "d", text: "defending using technology" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "الكاتب يرى أن التكنولوجيا مفيدة ومهمة للواجبات والعمل، ولكنه يشدد على وضع حدود وضوابط (with limits).",
+              distractors: {
+                a: "خطأ: الكاتب لا يعادي التكنولوجيا بل يعترف بفائدتها.",
+                b: "خطأ: لا يدعو لاستخدامها بلا قيود.",
+                d: "خطأ: هو يوجه نقداً للإفراط فيها ولا يدافع عنها."
+              }
+            }
+          },
+          {
+            q: "6. According to the passage, ........of something isn't good for us.",
+            options: [
+              { key: "a", text: "little enough" },
+              { key: "b", text: "a bit little" },
+              { key: "c", text: "the majority" },
+              { key: "d", text: "too much" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "تكرر في النص: 'too much technology can be bad' و 'too much digital use' فالمغالاة والإفراط هما المشكلة.",
+              distractors: {
+                a: "خطأ: القدر القليل الكافي ليس ضاراً.",
+                b: "خطأ: النسبة القليلة لا تسبب الأذى المذكور.",
+                c: "خطأ: السياق يتحدث عن الإفراط والمبالغة (too much)."
+              }
+            }
+          },
+          {
+            q: "7. Restricting the hours we spend with screens is hard at first for .....",
+            options: [
+              { key: "a", text: "fear of missing anything important" },
+              { key: "b", text: "getting addicted to it." },
+              { key: "c", text: "not having enough time to do everything" },
+              { key: "d", text: "preventing people from developing bad habits." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "صعوبة البداية في الحمية الرقمية ترجع إلى تعلق الشخص بها واعتياده عليها لدرجة تشبه الإدمان الرقمي والعادات الراسخة.",
+              distractors: {
+                a: "خطأ: لم تتطرق القطعة لمتلازمة فوات الأخبار صراحة.",
+                c: "خطأ: التقليل يمنح وقتاً أكثر وليس العكس.",
+                d: "خطأ: منع العادات السيئة هو الهدف المنشود وليس سبب الصعوبة."
+              }
+            }
+          },
+          {
+            q: "8.. Which one summarizes the passage?",
+            options: [
+              { key: "a", text: "A digital diet stops us wasting out times online." },
+              { key: "b", text: "Parents must limit their children's use for digital device" },
+              { key: "c", text: "A digital diet develops creativity." },
+              { key: "d", text: "We shouldn't depend on technology all the time." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "الخلاصة الكلية للنص: تجنب الاعتماد الدائم والمفرط على التكنولوجيا وإعادة التوازن للحياة الواقعية.",
+              distractors: {
+                a: "خطأ: حفظ الوقت تفصيلة جزئية من الفوائد الصحية والنفسية العامة.",
+                b: "خطأ: النص موجه لجميع الأفراد وليس الآباء والأبناء فقط.",
+                c: "خطأ: تنمية الإبداع نقطة فرعية ذُكرت في سياق الخروج للطبيعة."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "Passage 3: Positivity and Good Health",
+        text: `It's normal to feel a bit blue from time to time. However, studies show that negative emotions can harm the body. When you see red, your blood pressure is raised and you can suffer from headaches, sleep problems and digestive problems. However, what about positive feelings and attitudes? Until recently, scientists had not investigated whether there is a link between positive feelings and good health. Then, in a study that had followed more than 6,000 men and women aged 25 to 74 for 20 years, researchers found that positivity reduced the risk of heart disease.
+
+Other factors influencing health included a supportive network of family and friends, and an optimistic outlook on life. The research showed that children who were more able to stay focused on a task, and who had a more positive attitude to life at age seven, were usually in better health 30 years later. The study has been controversial. Some health professionals believe that bad lifestyle choices, such as smoking or lack of exercise, are the reason for heart disease and other illnesses. The researchers, while agreeing, raise the question: why are people making bad lifestyle decisions? Do more optimistic people make better and healthier lifestyle choices?
+
+The researchers appreciate that not everyone's personal circumstances and environment make it possible to live without worry. However, they believe that if we teach children to develop positive thinking, and to 'bounce back' after a setback, these qualities will improve their overall health in the future.`,
+        vocab: [
+          { en: "blood pressure", ar: "ضغط الدم" },
+          { en: "digestive", ar: "الهضم / هضمي" },
+          { en: "factors", ar: "عوامل" },
+          { en: "outlook", ar: "نظرة / أفق" },
+          { en: "task", ar: "مهمة" },
+          { en: "lifestyle", ar: "أسلوب معيشة" }
+        ],
+        questions: [
+          {
+            q: "1. Which of the following causes heart diseases?",
+            options: [
+              { key: "a", text: "eating habits" },
+              { key: "b", text: "personal circumstances" },
+              { key: "c", text: "negative emotions" },
+              { key: "d", text: "lack of exercise" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "ذكرت القطعة أن المشاعر السلبية ترفع ضغط الدم وتزيد خطورة أمراض القلب، في حين أثبتت دراسة الـ 20 عاماً أن الإيجابية والتفاؤل يقللان هذه المخاطر.",
+              distractors: {
+                a: "خطأ: العادات الغذائية لم تُذكر بشكل مباشر في الفقرة الأولى.",
+                b: "خطأ: الظروف الشخصية تؤثر على القلق لكنها ليست المسبب المباشر للنص.",
+                d: "خطأ: قلة التمارين ذُكرت كخيار سلوكي وليس محور دراسة التأثير النفسي."
+              }
+            }
+          },
+          {
+            q: "2. What does the underlined colour idiom 'feel a bit blue' mean?",
+            options: [
+              { key: "a", text: "feeling ill" },
+              { key: "b", text: "suffering negative emotions" },
+              { key: "c", text: "having a blue face" },
+              { key: "d", text: "having blood pressure" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "المصطلح الاصطلاحي 'feel blue' يعني الشعور بالحزن والإحباط أو المرور بمشاعر سلبية (suffering negative emotions).",
+              distractors: {
+                a: "خطأ: التعبير يشير للحزن النفسي وليس للمرض العضوي المباشر.",
+                c: "خطأ: ترجمة حرفية خاطئة تماماً للألوان.",
+                d: "خطأ: ضغط الدم ارتبط في النص بالغضب الشديد 'see red'."
+              }
+            }
+          },
+          {
+            q: "3. The underlined pronoun 'they' in the last paragraph refers to",
+            options: [
+              { key: "a", text: "personal circumstances" },
+              { key: "b", text: "The researchers" },
+              { key: "c", text: "lifestyle choices" },
+              { key: "d", text: "environments" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "الضمير في بداية الجملة يعود على الباحثين: 'The researchers appreciate... However, they believe...'",
+              distractors: {
+                a: "خطأ: الظروف الشخصية غير عاقلة ولا تفكر أو تؤمن بحلول.",
+                c: "خطأ: الخيارات الحياتية ليست الفاعل المعنوي.",
+                d: "خطأ: البيئات ليست هي صاحبة هذا الاعتقاد."
+              }
+            }
+          },
+          {
+            q: "4. ........is a side effect of negative emotions.",
+            options: [
+              { key: "a", text: "Setback" },
+              { key: "b", text: "Indigestion" },
+              { key: "c", text: "Smoking" },
+              { key: "d", text: "Lack of exercise" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "ذكر النص صراحة: 'suffer from headaches, sleep problems and digestive problems' (عسر الهضم Indigestion).",
+              distractors: {
+                a: "خطأ: Setback تعني نكسة أو عائق في الحياة.",
+                c: "خطأ: التدخين عادة سلوكية وليس عرضاً مرضياً مذكوراً كمضاعفة للغضب.",
+                d: "خطأ: قلة النشاط البدني سلوك معيشي."
+              }
+            }
+          },
+          {
+            q: "5. Which one is a quality that will improve children's health?",
+            options: [
+              { key: "a", text: "bouncing back" },
+              { key: "b", text: "supporting family and friends" },
+              { key: "c", text: "focusing on a task" },
+              { key: "d", text: "developing a setback" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "نصت الفقرة الأخيرة: 'if we teach children to develop positive thinking, and to bounce back after a setback, these qualities will improve their overall health...'",
+              distractors: {
+                b: "خطأ: الأهل هم من يقدمون الدعم في النص وليس الأطفال.",
+                c: "خطأ: التركيز على المهمة كان مؤشراً تمت ملاحظته في دراسة سن السابعة.",
+                d: "خطأ: النكسة حدث سلبي لا يرغب به أحد."
+              }
+            }
+          },
+          {
+            q: "6. The best title of the passage is",
+            options: [
+              { key: "a", text: "Feeling a bit blue" },
+              { key: "b", text: "Avoiding heart diseases" },
+              { key: "c", text: "Work-life balance" },
+              { key: "d", text: "Improving our health" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "القطعة تركز في مجملها على كيفية تحسين الصحة والوقاية من الأمراض عبر المشاعر الإيجابية والتفاؤل (Improving our health).",
+              distractors: {
+                a: "خطأ: الشعور بالحزن مجرد افتتاحية ومدخل لموضوع التأثير النفسي.",
+                b: "خطأ: أمراض القلب جزء فقط من المشاكل الصحية المطروحة.",
+                c: "خطأ: التوازن بين العمل والحياة لم يناقشه المقال."
+              }
+            }
+          },
+          {
+            q: "7. The main idea of the passage is",
+            options: [
+              { key: "a", text: "the causes of heart diseases" },
+              { key: "b", text: "How to bring up children." },
+              { key: "c", text: "a supportive network of family and friends" },
+              { key: "d", text: "the importance of keeping good health" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "الفكرة الأساسية تتمحور حول أهمية الحفاظ على صحة جيدة ودور التفكير الإيجابي والصلابة النفسية في تحقيق ذلك.",
+              distractors: {
+                a: "خطأ: مسببات أمراض القلب نوقشت كدليل فرعي على ضرورة النظرة المتفائلة.",
+                b: "خطأ: تربية الأطفال ذُكرت في جملة واحدة فقط كإجراء وقائي.",
+                c: "خطأ: دعم الأهل والأصدقاء عامل مساعد ضمن عوامل أخرى."
+              }
+            }
+          },
+          {
+            q: "8. Which of the following is incorrect according to the passage?",
+            options: [
+              { key: "a", text: "optimistic people make bad decisions" },
+              { key: "b", text: "positive thinking improves one's overall health" },
+              { key: "c", text: "positivity reduced the risk of heart disease." },
+              { key: "d", text: "Smoking is a reason for heart diseases" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "هذه الجملة خاطئة وتناقض ما جاء بالنص تماماً، حيث طرح الباحثون سؤالاً عما إذا كان المتفائلون يتخذون قرارات صحية أفضل (better and healthier choices).",
+              distractors: {
+                b: "جملة صحيحة ومذكورة بالنص، والمطلوب استخراج الجملة الخاطئة (incorrect).",
+                c: "جملة صحيحة نص عليها الباحثون بدراستهم على 6000 شخص.",
+                d: "جملة صحيحة ومذكورة كأحد عوامل الخطر المعروفة."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "Passage 4: A Trip to the Moon (Fiction)",
+        text: `Taking a trip to the moon was one of the strangest experiences I'd ever had. It started when Miss Heba, our science teacher, was showing a video about the solar system. Halfway through the video, I noticed a sparkling metal disc on the floor. I found myself picking up it.
+
+On touching the metal disk, a strange thing happened. I wasn't in the classroom. I was hovering in the air. I could see the whole town. I was a little nervous, but also pretty excited. I remembered the metal disk. I looked closely at the disk. On it were the words: "Floating through the air, like a balloon, your travels will not stop, until you reach the moon."
+
+Suddenly, I was standing on the moon. It was amazing! It looked different than Earth. No trees, water, wind, or houses. For each step I took I would bounce way up into the air. Every step I took left a huge footprint in the dust. I had to be careful not to jump into a crater. I was bounding over to something in the distance that looked very out of place. When I got there, I realized it was a flag. On the flag were the words: "To go to Earth, close your eyes and think of what you've learned."
+
+I decided to close my eyes and think of the weather and other characteristics of the moon. When I opened my eyes I was sitting in my classroom. Miss Heba was turning on the lights because the video was over. I sat there wondering about what happened. I opened my hand to look at the disk, but it was gone! Was it just a dream?`,
+        vocab: [
+          { en: "sparkle", ar: "يتلألأ / يلمع" },
+          { en: "bounce", ar: "يرتد / يقفز" },
+          { en: "hover", ar: "يحلق / يحوم في الجو" },
+          { en: "crater", ar: "فوهة بركانية / حفرة" },
+          { en: "footprints", ar: "آثار أقدام" },
+          { en: "bound over", ar: "يقفز باتجاه / يتجه إلى" }
+        ],
+        questions: [
+          {
+            q: "1. What would be another title for the passage?",
+            options: [
+              { key: "a", text: "The Great Class Field Trip" },
+              { key: "b", text: "The Magic Metal Disk" },
+              { key: "c", text: "The Living Moon" },
+              { key: "d", text: "The Solar System" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "القرص المعدني السحري هو المحرك الأساسي لكل أحداث المغامرة الخيالية من البداية وحتى النهاية (The Magic Metal Disk).",
+              distractors: {
+                a: "خطأ: لم تكن رحلة مدرسية حقيقية للفصل.",
+                c: "خطأ: القمر غير مأهول بالحياة ووصفه الكاتب بالخلو التام من الأشجار والماء.",
+                d: "خطأ: النظام الشمسي موضوع الفيديو المعروض داخل الفصل فقط."
+              }
+            }
+          },
+          {
+            q: "2. What is the setting at the beginning of the story?",
+            options: [
+              { key: "a", text: "the moon" },
+              { key: "b", text: "outer space" },
+              { key: "c", text: "a town" },
+              { key: "d", text: "a classroom" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "بدأت القصة في الفصل المدرسي أثناء عرض حصة العلوم: 'when Miss Heba, our science teacher, was showing a video... in the classroom'.",
+              distractors: {
+                a: "خطأ: القمر وصل إليه في منتصف الرحلة.",
+                b: "خطأ: الفضاء انتقل إليه لاحقاً.",
+                c: "خطأ: البلدة رآها وهو طائر بعد لمس القرص."
+              }
+            }
+          },
+          {
+            q: "3. The underlined word 'hovering' is closest in meaning to......",
+            options: [
+              { key: "a", text: "floating" },
+              { key: "b", text: "dreaming" },
+              { key: "c", text: "jumping" },
+              { key: "d", text: "swimming" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "كلمة 'hovering' تعني التحليق أو الطفو في الهواء بثبات، ومرادفها المباشر في النص هو: floating ('Floating through the air, like a balloon').",
+              distractors: {
+                b: "خطأ: dreaming تعني يحلم.",
+                c: "خطأ: jumping تعني يقفز بحركات سريعة.",
+                d: "خطأ: swimming تعني السباحة في الماء."
+              }
+            }
+          },
+          {
+            q: "4. The trip to the moon started ........ of the video.",
+            options: [
+              { key: "a", text: "at the end" },
+              { key: "b", text: "in the middle" },
+              { key: "c", text: "at the start" },
+              { key: "d", text: "before the start" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "مذكور بالسطر الثالث: 'Halfway through the video, I noticed a sparkling metal disc' أي في منتصف الفيديو بالضبط (in the middle).",
+              distractors: {
+                a: "خطأ: عند نهاية الفيديو كان قد عاد للفصل.",
+                c: "خطأ: لم تبدأ في البداية بل في المنتصف.",
+                d: "خطأ: بدأ الحدث بعد تشغيل الفيديو بالفعل."
+              }
+            }
+          },
+          {
+            q: "5. The writer does NOT know if the moon trip really happened as............",
+            options: [
+              { key: "a", text: "He was sitting in a desk when the video ended." },
+              { key: "b", text: "He had difficulty remembering the order of events." },
+              { key: "c", text: "The metal disk was gone and he did not have any proof." },
+              { key: "d", text: "The solar system video is still being shown." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "ينتهي النص بحيرته لأنه لم يعد يملك أي دليل مادي بعد اختفاء القرص: 'I opened my hand to look at the disk, but it was gone! Was it just a dream?'.",
+              distractors: {
+                a: "خطأ: جلوسه في المقعد لم يكن المانع الرئيسي من تصديق الأمر بل اختفاء القرص.",
+                b: "خطأ: يتذكر تفاصيل الأحداث بشكل دقيق جداً.",
+                d: "خطأ: الفيديو كان قد انتهى بالفعل."
+              }
+            }
+          },
+          {
+            q: "6. Which event happens first in the story?",
+            options: [
+              { key: "a", text: "The writer is hovering above the town." },
+              { key: "b", text: "The writer is sitting at a desk." },
+              { key: "c", text: "The writer reads the words on the disk." },
+              { key: "d", text: "The writer picks up a sparkling metal disk." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "أول حدث في التسلسل الزمني هو جلوس الكاتب على مقعده لمشاهدة الفيديو قبل أن يلمح القرص أو يلتقطه.",
+              distractors: {
+                a: "خطأ: الطيران تم بعد لمس القرص.",
+                c: "خطأ: قراءة الكلمات تمت وهو في الجو.",
+                d: "خطأ: التقاط القرص حدث في منتصف الفيديو بعد الجلوس."
+              }
+            }
+          },
+          {
+            q: "7. In which sentence does the word bound mean the same as in : 'I was bounding over to something in the distance ....'?",
+            options: [
+              { key: "a", text: "The sticks were bound in a bundle." },
+              { key: "b", text: "My book was bound at the printers." },
+              { key: "c", text: "The rabbit will bound through the field." },
+              { key: "d", text: "There is bound to be a change of plans." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "فعل 'bound' على القمر يعني يقفز بخطوات واسعة، وهو نفس المعنى في قفز الأرنب في الحقل (The rabbit will bound...).",
+              distractors: {
+                a: "خطأ: تعني مربوطة بحبل.",
+                b: "خطأ: تعني تجليد الكتاب في المطبعة.",
+                d: "خطأ: تعني حتمي أو مؤكد الحدوث."
+              }
+            }
+          },
+          {
+            q: "8. Which of the following sentences is NOT correct?",
+            options: [
+              { key: "a", text: "There is no difference between life on the Earth and the moon." },
+              { key: "b", text: "There are craters on the surface of the moon." },
+              { key: "c", text: "On returning from the trip, he found that the metal disc was gone." },
+              { key: "d", text: "On touching the metal disc, the writer's trip to the moon started." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "هذه العبارة خاطئة ومناقضة للنص، فالكاتب قال: 'It looked different than Earth. No trees, water, wind, or houses'.",
+              distractors: {
+                b: "عبارة صحيحة حيث ذكر أنه كان حذراً ألا يسقط في فوهة (crater).",
+                c: "عبارة صحيحة فقد فتح يده ليجد القرص اختفى.",
+                d: "عبارة صحيحة فبمجرد لمسه بدأ الطيران."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 5,
+        title: "Passage 5: How to Spot a Liar",
+        text: `Psychologist Ekman made a study of how people act when they lie. They don't only want the hearer to believe what they are saying; but also to cover up what they are feeling such as guilt, fear, anger, pain, or even pleasure. By noticing the contradictions between their words and their behavior, Ekman found that he could catch them while lying.
+
+Ekman concludes that there are four kinds of behavior that can give a lie away: the liar's words, voice, body, and face. He says that liars try to control their words and face, since that's what the listener will be observing. So, "lie catchers" should observe the speaker's voice and body signals, which he may forget to control.
+
+A common problem for liars is keeping their story straight. It's known that one lie leads to another, and before the liar knows it, someone will realize their lying. A less common but more fatal giveaway is what's called a "slip of the tongue," in which the liar accidentally tells the truth. Frequent pauses may indicate that he's making up the story.
+
+Liar's voice can also give him away. The voice is harder to control than words. When telling a lie, he may speak loudly or softly, speed up or slow down. This can be due to the emotion he's hiding. However, vocal changes like these aren't always signs of lying.
+
+Somebody's behaviors can be controlled, but others can't. When telling a lie, a person may swallow, sweat, or breathe faster. Nervous gestures often increase when a person is under stress. The liar may use a gesture that contradicts his words, such as nodding "yes" while saying "no."`,
+        vocab: [
+          { en: "guilt", ar: "ذنب" },
+          { en: "contradictions", ar: "متناقضات" },
+          { en: "accidentally", ar: "بالصدفة" },
+          { en: "frequent", ar: "متكرر" },
+          { en: "vocal", ar: "صوتي / لفظي" },
+          { en: "gestures", ar: "إيماءات / حركات" },
+          { en: "indicate", ar: "يشير إلى" },
+          { en: "nodding", ar: "يومئ بالرأس" },
+          { en: "swallow", ar: "يبلع" }
+        ],
+        questions: [
+          {
+            q: "1. The most suitable title for the passage could be",
+            options: [
+              { key: "a", text: "How to spot a liar." },
+              { key: "b", text: "How to react when somebody lies to you" },
+              { key: "c", text: "How to overcome lying." },
+              { key: "d", text: "The value of body gestures." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "المقال بأكمله يشرح أساليب ومؤشرات كشف واكتشاف الكاذب (How to spot a liar) من خلال دراسة دكتور إيكمان.",
+              distractors: {
+                a: "خطأ: النص لا يناقش ردود أفعال السامع عند مواجهة الكاذب.",
+                c: "خطأ: لا يعالج الكذب سلوكياً للتخلص منه.",
+                d: "خطأ: حركات الجسد جزء فقط من العلامات الأربعة المذكورة."
+              }
+            }
+          },
+          {
+            q: "2. According to the 1st paragraph, Ekman could catch people lying seeing that",
+            options: [
+              { key: "a", text: "they were showing intense emotions" },
+              { key: "b", text: "their behavior was unusual" },
+              { key: "c", text: "what they said and did disagreed" },
+              { key: "d", text: "they were hiding their real feelings" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "مذكور بالفقرة الأولى: 'By noticing the contradictions between their words and their behavior, Ekman found that he could catch them' أي وجود تعارض وتناقض بين الكلمات والسلوك.",
+              distractors: {
+                a: "خطأ: إظهار المشاعر ليس دليلاً قاطعاً على الكذب.",
+                b: "خطأ: مصطلح السلوك غير المعتاد عام وغير محدد.",
+                d: "خطأ: إخفاء المشاعر هو هدف الكاذب، لكن الاكتشاف يتم بسبب التناقض الصريح."
+              }
+            }
+          },
+          {
+            q: "3. According to the passage, body behaviours",
+            options: [
+              { key: "a", text: "are more obvious when people are nervous." },
+              { key: "b", text: "can hardly be checked" },
+              { key: "c", text: "depend on a person's temperament" },
+              { key: "d", text: "give away people's intentions" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "ورد بالفقرة الأخيرة: 'Nervous gestures often increase when a person is under stress' أي تصبح حركات الجسد اللاإرادية أكثر وضوحاً مع التوتر والضغط.",
+              distractors: {
+                b: "خطأ: يمكن ملاحظتها ورصدها ونصح الباحث بالانتباه إليها.",
+                c: "خطأ: لم يربطها النص بمزاج وطباع الشخص.",
+                d: "خطأ: لغة الجسد تفضح التوتر والكذب وليس النوايا المسبقة."
+              }
+            }
+          },
+          {
+            q: "4. According to paragraph 4 when lying, people may try to .......",
+            options: [
+              { key: "a", text: "sound nice and kind" },
+              { key: "b", text: "hide their frustration" },
+              { key: "c", text: "speak faster than usual" },
+              { key: "d", text: "look reliable to the speaker" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "توضح الفقرة الرابعة التغيرات الصوتية اللاإرادية للكاذب: 'When telling a lie, he may speak loudly or softly, speed up or slow down'.",
+              distractors: {
+                a: "خطأ: لم تتحدث الفقرة عن التظاهر باللطف.",
+                b: "خطأ: التغير الصوتي يرتبط بالمشاعر المخبأة عموماً وليس الإحباط فقط.",
+                d: "خطأ: الثقة يحاول إظهارها بالكلمات، بينما سرعة الصوت تفضحه."
+              }
+            }
+          },
+          {
+            q: "5. A 'slip of the tongue' happens when the person tells the truth......",
+            options: [
+              { key: "a", text: "against his or her will." },
+              { key: "b", text: "because he or she is tired." },
+              { key: "c", text: "because he or she is forced to." },
+              { key: "d", text: "so he or she won't be in trouble." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "زلة اللسان (slip of the tongue) عُرّفت في النص بأنها: 'in which the liar accidentally tells the truth' أي دون قصد ورغماً عن إرادته (against his will).",
+              distractors: {
+                b: "خطأ: التعب ليس سبباً رئيسياً لزلة اللسان.",
+                c: "خطأ: لا يوجد إجبار خارجي، بل زلة لسان عفوية.",
+                d: "خطأ: زلة اللسان توقعه في المأزق ولا تنقذه."
+              }
+            }
+          },
+          {
+            q: "6. 'A common problem for liars is keeping their story straight' means......",
+            options: [
+              { key: "a", text: "Liars can't walk straight when they tell a lie." },
+              { key: "b", text: "Liars have problems in telling the exact same story." },
+              { key: "c", text: "Liars always keep a straight face when telling a lie." },
+              { key: "d", text: "Liars don't have problems explaining their own stories." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "تعبير 'keeping their story straight' يعني الحفاظ على تفاصيل القصة متسقة ومتطابقة دون تضارب، وهو أمر يفشل فيه الكاذب لأن الأكاذيب تتناقض.",
+              distractors: {
+                a: "خطأ: لا علاقة له بالمشي المستقيم.",
+                c: "خطأ: الملامح الجادة غير مقصودة في هذا المصطلح.",
+                d: "خطأ: النص يؤكد أن لديهم صعوبة بالغة في ذلك."
+              }
+            }
+          },
+          {
+            q: "7. On suspecting of a liar, we should pay attention to these signs, EXCEPT.....",
+            options: [
+              { key: "a", text: "the speaker's voice." },
+              { key: "b", text: "the speaker's facial expressions." },
+              { key: "c", text: "the speaker's body signals." },
+              { key: "d", text: "the speaker's clothes." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "حدد إيكمان 4 سلوكيات: الكلمات، الصوت، الجسد، والوجه. ولم يذكر ملابس المتحدث (clothes) كعلامة إطلاقاً.",
+              distractors: {
+                a: "علامة مذكورة بالنص ضمن الإشارات الصوتية.",
+                b: "علامة مذكورة بالنص ويحاول الكاذب التحكم بها.",
+                c: "علامة أساسية نصح الخبير بالتركيز عليها."
+              }
+            }
+          },
+          {
+            q: "8. Which of the following is TRUE according to the passage?",
+            options: [
+              { key: "a", text: "Liars do their best to select the right words." },
+              { key: "b", text: "Liars are good at making their stories sound logical." },
+              { key: "c", text: "Liars take great pains to avoid a 'slip of the tongue'" },
+              { key: "d", text: "Liars pause frequently to remember the details of the past events." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "ذكر النص صراحة: 'liars try to control their words and face, since that's what the listener will be observing' فهم يبذلون جهداً لاختيار الكلمات المقنعة.",
+              distractors: {
+                b: "خطأ: قصصهم تنكشف بسهولة بسبب التناقضات.",
+                c: "خطأ: زلة اللسان تخرج عفوية مفاجئة ولا يمكن التخطيط لمنعها.",
+                d: "خطأ: التوقف المتكرر يحدث لأنهم يبتكرون القصة لحظياً (making up the story)."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 6,
+        title: "Passage 6: Role Models and Parents",
+        text: `Parents are the most important models for growing children; in fact the first influences on them. First, parents are usually the earliest human contact the child has in the world. In the eyes of the child, parents are by far the most powerful people. They influence the child through nurturing him and providing his needs. In a word, his survival almost solely depends on them. Undoubtedly then, the child looks up to these prime models for the development of his character. Perhaps this explains some of the traditional sayings which suggest that the child takes after the parents.
+
+Take the expression, "a chip off the old block", for instance, which is often used to confirm the close similarity between the behaviour of the child and his parents'. It stands to reason that the child naturally picks up his traits, whether good or bad, from his parents. Although the child's parents are his earliest and most important models, he is exposed to many other potent influences: siblings, television, school, celebrities, social media and so on. The walls of boys' rooms, for example, are often covered with the pictures of their idols. But do your children emulate the behaviour of everyone? It is known that they do not imitate all the people they know in equal degrees. It is therefore important to understand the variables that determine the extent to which the child takes up the behaviour displayed by his models.`,
+        vocab: [
+          { en: "nurturing", ar: "تغذية / رعاية" },
+          { en: "solely", ar: "بمفرده / فقط" },
+          { en: "confirm", ar: "يؤكد" },
+          { en: "traits", ar: "سمات / صفات" },
+          { en: "siblings", ar: "إخوة" },
+          { en: "emulate", ar: "يحاكي / يقلد" },
+          { en: "idols", ar: "قدوة / معبود الجماهير" },
+          { en: "imitate", ar: "يقلد" },
+          { en: "chip off the old block", ar: "هذا الشبل من ذاك الأسد" }
+        ],
+        questions: [
+          {
+            q: "1. The main idea of the passage is",
+            options: [
+              { key: "a", text: "a chip off the old block." },
+              { key: "b", text: "How parents affect their children." },
+              { key: "c", text: "nature not nurture." },
+              { key: "d", text: "Children's idols." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "تدور القطعة بشكل أساسي حول دور الوالدين كأول وأقوى قدوة ومؤثر في تشكيل شخصية وسلوك الأبناء (How parents affect their children).",
+              distractors: {
+                a: "خطأ: المثل الشعبي استشهاد توضيحي فقط.",
+                c: "خطأ: النص لم يتبن الطبيعة ضد التربية بل ركز على التنشئة والقدوة.",
+                d: "خطأ: صور المشاهير ذُكرت كمؤثرات خارجية لاحقة."
+              }
+            }
+          },
+          {
+            q: "2. We can infer that parents greatly affect the children's",
+            options: [
+              { key: "a", text: "behaviours" },
+              { key: "b", text: "names" },
+              { key: "c", text: "siblings" },
+              { key: "d", text: "celebrities" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "الأثر الأعظم للوالدين يظهر في سلوك وتصرفات الطفل اليومية (behaviours) التي يحاكيها منهما.",
+              distractors: {
+                b: "خطأ: الاسم مجرد مسمى شكلي لا يحدد سلوك الشخصية.",
+                c: "خطأ: الإخوة يتشاركون نفس التأثير وليسوا هم الأثر.",
+                d: "خطأ: المشاهير مصدر تأثير خارجي بعيد عن المنزل."
+              }
+            }
+          },
+          {
+            q: "3. The underlined phrasal verb 'look up to' is close in meaning to .....",
+            options: [
+              { key: "a", text: "idol" },
+              { key: "b", text: "respect" },
+              { key: "c", text: "denounce" },
+              { key: "d", text: "scorn" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "الفعل الاصطلاحي 'look up to' يعني يحترم ويقدر ويقتدي بـ (respect).",
+              distractors: {
+                a: "خطأ: idol اسم بمعنى معبود أو قدوة وليس فعلاً مرادفاً.",
+                c: "خطأ: denounce تعني يندد أو يشجب.",
+                d: "خطأ: scorn تعني يحتقر أو يزدري."
+              }
+            }
+          },
+          {
+            q: "4. Children may look at ........ as their roles models.",
+            options: [
+              { key: "a", text: "school books" },
+              { key: "b", text: "money" },
+              { key: "c", text: "play hood" },
+              { key: "d", text: "celebrities" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "ذكر النص في الفقرة الثانية: 'he is exposed to many other potent influences: siblings, television, school, celebrities... with pictures of their idols'.",
+              distractors: {
+                a: "خطأ: الكتب وسيلة دراسية وليست قدوة شخصية حية.",
+                b: "خطأ: المال ليس شخصاً يُتخذ قدوة.",
+                c: "خطأ: اللعب نشاط ترفيهي."
+              }
+            }
+          },
+          {
+            q: "5. The prefix '........' makes the opposite of potent.",
+            options: [
+              { key: "a", text: "un" },
+              { key: "b", text: "ir" },
+              { key: "c", text: "im" },
+              { key: "d", text: "il" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "البادئة الصحيحة لكلمة 'potent' (قوي/فعال) لتكوين العكس هي 'im-' فتصبح 'impotent' (عاجز/ضعيف).",
+              distractors: {
+                a: "خطأ: un- لا تركب مع كلمة potent.",
+                b: "خطأ: ir- تأتي مع الكلمات التي تبدأ بـ r.",
+                d: "خطأ: il- تأتي مع الكلمات التي تبدأ بـ l."
+              }
+            }
+          },
+          {
+            q: "6. According to the passage, children imitate others' behaviours in ........ degrees.",
+            options: [
+              { key: "a", text: "equal" },
+              { key: "b", text: "some" },
+              { key: "c", text: "the same" },
+              { key: "d", text: "different" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "النص يقول: 'they do not imitate all the people they know in equal degrees' أي أنهم يقلدون الآخرين بدرجات متفاوتة ومختلفة (different degrees).",
+              distractors: {
+                a: "خطأ: النص نفى التساوي بقوله: not in equal degrees.",
+                b: "خطأ: المعنى المطلوب هو اختلاف الدرجات.",
+                c: "خطأ: the same تعني متطابقة وهو ضد النص."
+              }
+            }
+          },
+          {
+            q: "7. Which of the following summarizes the second paragraph?",
+            options: [
+              { key: "a", text: "Parents are children's role models." },
+              { key: "b", text: "children rebel to feel their characters." },
+              { key: "c", text: "Television has a devastating effect on children." },
+              { key: "d", text: "The walls of boys' rooms are covered with their idols." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "الفكرة الشاملة للفقرة الثانية تدور حول أن سلوك الأبناء امتداد لآبائهم (a chip off the old block) وتأثير الوالدين مع وجود مؤثرات أخرى.",
+              distractors: {
+                b: "خطأ: لم يذكر النص تمرداً للأطفال.",
+                c: "خطأ: التلفاز ذكر كأحد المؤثرات ولم يصفه النص بالمدمر.",
+                d: "خطأ: تعليق الصور مثال فرعي بسيط."
+              }
+            }
+          },
+          {
+            q: "8. The expression, 'a chip off the old block' means",
+            options: [
+              { key: "a", text: "a child who looks up to celebrities." },
+              { key: "b", text: "Someone who is building a new block." },
+              { key: "c", text: "The different traits between a child and parents." },
+              { key: "d", text: "a child who is very similar in character to his/her parents." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "المثل المقابل لـ (هذا الشبل من ذاك الأسد)، ويعني تشابهاً وتطابقاً كبيراً في الشخصية والصفات بين الطفل وأبويه.",
+              distractors: {
+                a: "خطأ: لا علاقة للمثل بالمشاهير.",
+                b: "خطأ: ترجمة حرفية خاطئة للبناء والكتل الحجرية.",
+                c: "خطأ: المثل يعبر عن التشابه وليس التباين."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 7,
+        title: "Passage 7: Vivid Dreams",
+        text: `Dreams are fascinating. They occur as you sleep and generally become more vivid as the sleep stage progresses. Sometimes you can't remember a dream; others may be unclear while there are some that can be recalled because they are so intense. These are what we call Vivid Dreams.
+
+Have you experienced any vivid dreams? Social media and online forums are full of stories of vivid dreams. Experts are claiming that there is a lot of truth in this phenomenon. People are sleeping longer and this allows more time for dreaming. In addition, the more boring your life is, the more your night time brain activity tries to recompense and the more exciting your dreams become.
+
+Experts decline that dreams can predict events, but they can help us understand our feelings. The events in dreams are symbolic. For example, missing that train might indicate that you are feeling left behind, or that you are nervous. Walking on air shows your feeling of being impossible to be defeated. Dreaming of natural disasters show that you are feeling frightened by events out of your control.
+
+It is worthwhile to try and discover the meaning of your dreams, as this can help you understand your feelings. One way to do this is by association. If you dream about people, ask: what does this person mean to me? If you dream about birds think: do you love them or do they make you nervous? Some people claim they never dream; well, they do, but they just forget.`,
+        vocab: [
+          { en: "vivid", ar: "واضح / جلي" },
+          { en: "recompense", ar: "يعوض" },
+          { en: "recall", ar: "يستدعي / يتذكر" },
+          { en: "symbolic", ar: "رمزي" },
+          { en: "phenomenon", ar: "ظاهرة" },
+          { en: "defeat", ar: "يهزم" },
+          { en: "worthwhile", ar: "جدير بالاهتمام" },
+          { en: "association", ar: "ربط / تداعي الأفكار" },
+          { en: "forum", ar: "منتدى" }
+        ],
+        questions: [
+          {
+            q: "1. What is the best title for the passage?",
+            options: [
+              { key: "a", text: "Real Life" },
+              { key: "b", text: "Long Days" },
+              { key: "c", text: "Natural Disasters" },
+              { key: "d", text: "Fascinating Dreams" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "تبدأ القطعة بـ 'Dreams are fascinating' وتستعرض سحر وتفاصيل الأحلام الحية والواضحة وتفسير رموزها (Fascinating Dreams).",
+              distractors: {
+                a: "خطأ: النص يناقش عالم الأحلام وليس واقع اليقظة.",
+                b: "خطأ: الأيام الطويلة لم تكن الموضوع الرئيسي.",
+                c: "خطأ: الكوارث الطبيعية مجرد رمز ذكر كحلم للخوف."
+              }
+            }
+          },
+          {
+            q: "2. The underlined word 'recompense' means to",
+            options: [
+              { key: "a", text: "fall asleep deeply" },
+              { key: "b", text: "exercise as soon as you wake up" },
+              { key: "c", text: "give in return for something lost" },
+              { key: "d", text: "post something on social media" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "كلمة 'recompense' تعني يعوض عما فُقد، أي تقديم إثارة في الأحلام تعويضاً عن الملل في الحياة اليومية (give in return for something lost).",
+              distractors: {
+                a: "خطأ: لا تعني النوم العميق.",
+                b: "خطأ: ممارسة الرياضة الصباحية غير واردة بالمصطلح.",
+                d: "خطأ: النشر على السوشيال ميديا خارج المعنى."
+              }
+            }
+          },
+          {
+            q: "3. According to the passage, we infer that the events in dreams --",
+            options: [
+              { key: "a", text: "will certainly come true" },
+              { key: "b", text: "might happen" },
+              { key: "c", text: "won't take place" },
+              { key: "d", text: "are no longer existed" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "يؤكد الخبراء في النص: 'Experts decline that dreams can predict events' أي أن أحداث الأحلام لا تتنبأ بالمستقبل ولن تقع حرفياً كأحداث واقعية.",
+              distractors: {
+                a: "خطأ: نفى العلماء تماماً قدرتها على التنبؤ بالأحداث الحتمية.",
+                b: "خطأ: الأحلام رموز لمشاعر داخلية وليست احتمالات مستقبلية.",
+                d: "خطأ: النص يناقش دلالتها الحالية للمشاعر."
+              }
+            }
+          },
+          {
+            q: "4. If someone dreams about walking on the air, this means they ....",
+            options: [
+              { ke
