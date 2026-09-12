@@ -16,9 +16,9 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-  <!-- صفحة الترحيب (Welcome Modal / Hero Screen) -->
-  <div id="welcomeScreen" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col items-center text-center transform transition-all animate-in fade-in zoom-in duration-300">
+  <!-- صفحة الترحيب (Welcome Modal) -->
+  <div id="welcomeScreen" style="display: flex;" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 flex flex-col items-center text-center">
       <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-violet-500 text-white rounded-2xl flex items-center justify-center text-2xl font-black shadow-lg shadow-indigo-500/30 mb-4">
         3ث
       </div>
@@ -27,10 +27,10 @@
       </span>
       <h2 class="text-2xl font-black text-slate-900 mt-1">مرحباً بكِ في منصة قطع الفهم</h2>
       <p class="text-xs sm:text-sm text-slate-500 mt-2 leading-relaxed">
-        تدريب عملي تفاعلي على مهارة القراءة والاستيعاب مع تصحيح ذكي فوري وشرح أسباب الإجابة واستبعاد الاختيارات الخاطئة.
+        تدريب عملي تفاعلي على مهارة القراءة والاستيعاب مع تصحيح فوري وشرح تفصيلي لأسباب الإجابة واستبعاد الاختيارات الخاطئة.
       </p>
 
-      <!-- بطاقة تحديد نطاق القطع المتاحة -->
+      <!-- بطاقة النطاق -->
       <div class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 my-5 flex items-center justify-between">
         <div class="text-right">
           <span class="text-[11px] text-slate-400 font-bold block">المجموعة المتاحة حالياً</span>
@@ -41,7 +41,7 @@
         </span>
       </div>
 
-      <button onclick="startTraining()" class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition active:scale-[0.98]">
+      <button id="startBtn" type="button" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-indigo-600/25 transition active:scale-[0.98] cursor-pointer">
         ابدأ التدريب الآن 🚀
       </button>
     </div>
@@ -63,7 +63,7 @@
       <!-- Passage Selector Dropdown -->
       <div class="flex items-center gap-2">
         <label for="passageSelect" class="text-xs hidden sm:inline-block font-semibold">اختر القطعة:</label>
-        <select id="passageSelect" onchange="changePassage(this.value)" class="bg-indigo-800 text-white text-sm rounded-lg px-3 py-1.5 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-white">
+        <select id="passageSelect" class="bg-indigo-800 text-white text-sm rounded-lg px-3 py-1.5 border border-indigo-500 focus:outline-none focus:ring-2 focus:ring-white">
         </select>
       </div>
     </div>
@@ -96,7 +96,7 @@
       </div>
     </section>
 
-    <!-- عمود الأسئلة والتحليل الذكي -->
+    <!-- عمود الأسئلة والتحليل -->
     <section class="lg:col-span-6 flex flex-col gap-4">
       
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
@@ -120,7 +120,7 @@
 
         <div id="optionsContainer" class="flex flex-col gap-2.5 en-text"></div>
 
-        <div id="aiExplanation" class="mt-5 p-4 rounded-xl hidden border transition-all">
+        <div id="aiExplanation" style="display: none;" class="mt-5 p-4 rounded-xl border transition-all">
           <div class="flex items-center gap-2 mb-2">
             <span class="text-lg">💡</span>
             <h4 class="text-sm font-bold" id="explanationTitle">التحليل الذكي للإجابة</h4>
@@ -129,10 +129,10 @@
         </div>
 
         <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
-          <button id="prevBtn" onclick="prevQuestion()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+          <button id="prevBtn" type="button" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
             السابق
           </button>
-          <button id="nextBtn" onclick="nextQuestion()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
+          <button id="nextBtn" type="button" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
             التالي
           </button>
         </div>
@@ -147,8 +147,7 @@
         id: 1,
         title: "Passage 1: Role Models & Elephants",
         text: `We have learnt from modern psychology that nobody wants to be told what to do by someone else. We resist when someone tries to make us do something. Yet, we persist in trying to change others. If we want others to change their ways, telling them to do so will have little effect unless we are living examples of that behavior.
-
-A team of researchers went to Africa to study the behavior of elephants. They came across a herd of elephants running wild, and destroying their environment. They discovered that these were all teenage male elephants. They had no adult role models to learn from. The researchers arranged to have some adult elephants brought in. In the beginning, there was no change and the teen elephants continued to run wild and fight with each other. However, after a few days the teen elephants began to settle down. Over time, they became well behaved and their wild actions subsided.
+        A team of researchers went to Africa to study the behavior of elephants. They came across a herd of elephants running wild, and destroying their environment. They discovered that these were all teenage male elephants. They had no adult role models to learn from. The researchers arranged to have some adult elephants brought in. In the beginning, there was no change and the teen elephants continued to run wild and fight with each other. However, after a few days the teen elephants began to settle down. Over time, they became well behaved and their wild actions subsided.
 
 On their own, the teen elephants had no role models and did not know how to behave. Once adults were introduced into their group, the teens had role models and began to be disciplined. In the same way, parents teach children through loving discipline and by setting an example. Children do not believe in words alone but in what they see parents do. They copy their good and bad habits because that is their example. That is the only way to bring about change. If we want to see positive change in others and in our family, neighborhood, community, society, or country, then we need to set a good example.`,
         vocab: [
@@ -309,13 +308,13 @@ On their own, the teen elephants had no role models and did not know how to beha
       {
         id: 2,
         title: "Passage 2: A Digital Diet",
-        text: `Technology is an important part of people's lives, but the time spent with digital devices needs to be balanced with other activities. A digital diet would help people limit screen time and reverse some bad habits from too much digital use. This balance could mean more time outside, more sleep, and longer attention spans. A digital diet would be worth the effort.
+        text: Technology is an important part of people's lives, but the time spent with digital devices needs to be balanced with other activities. A digital diet would help people limit screen time and reverse some bad habits from too much digital use. This balance could mean more time outside, more sleep, and longer attention spans. A digital diet would be worth the effort.
 
 Young people depend on technology for almost everything, but too much technology can be bad. Everyone who uses digital devices needs to restrict the hours they spend with screens by spending more time outside or reading a book before they go to bed. Even though computers are still needed for homework, people would benefit from less screen time.
 
 Most people rely on technology to communicate with others through text and email, but too much time looking at a screen creates bad habits. Instead, everyone should try to go outside during their free time so that they can get better grades in school and develop their creativity. Although a digital diet would be hard at first, it would help people in the end.
 
-Although electronic devices can help people, they can also be bad for people's health. Digital overload should be replaced with a digital diet. Most people know that a food diet helps people get rid of poor eating habits, and the same is true with a digital diet. Going on a digital diet would prevent people from developing poor habits with their digital devices.`,
+Although electronic devices can help people, they can also be bad for people's health. Digital overload should be replaced with a digital diet. Most people know that a food diet helps people get rid of poor eating habits, and the same is true with a digital diet. Going on a digital diet would prevent people from developing poor habits with their digital devices.,
         vocab: [
           { en: "balance", ar: "توازن" },
           { en: "restrict", ar: "يحد / يقلل" },
@@ -432,7 +431,7 @@ Although electronic devices can help people, they can also be bad for people's h
                 c: "خطأ: السياق يتحدث عن الإفراط والمبالغة (too much)."
               }
             }
-          },
+            },
           {
             q: "7. Restricting the hours we spend with screens is hard at first for .....",
             options: [
@@ -474,11 +473,11 @@ Although electronic devices can help people, they can also be bad for people's h
       {
         id: 3,
         title: "Passage 3: Positivity and Good Health",
-        text: `It's normal to feel a bit blue from time to time. However, studies show that negative emotions can harm the body. When you see red, your blood pressure is raised and you can suffer from headaches, sleep problems and digestive problems. However, what about positive feelings and attitudes? Until recently, scientists had not investigated whether there is a link between positive feelings and good health. Then, in a study that had followed more than 6,000 men and women aged 25 to 74 for 20 years, researchers found that positivity reduced the risk of heart disease.
+        text: It's normal to feel a bit blue from time to time. However, studies show that negative emotions can harm the body. When you see red, your blood pressure is raised and you can suffer from headaches, sleep problems and digestive problems. However, what about positive feelings and attitudes? Until recently, scientists had not investigated whether there is a link between positive feelings and good health. Then, in a study that had followed more than 6,000 men and women aged 25 to 74 for 20 years, researchers found that positivity reduced the risk of heart disease.
 
 Other factors influencing health included a supportive network of family and friends, and an optimistic outlook on life. The research showed that children who were more able to stay focused on a task, and who had a more positive attitude to life at age seven, were usually in better health 30 years later. The study has been controversial. Some health professionals believe that bad lifestyle choices, such as smoking or lack of exercise, are the reason for heart disease and other illnesses. The researchers, while agreeing, raise the question: why are people making bad lifestyle decisions? Do more optimistic people make better and healthier lifestyle choices?
 
-The researchers appreciate that not everyone's personal circumstances and environment make it possible to live without worry. However, they believe that if we teach children to develop positive thinking, and to 'bounce back' after a setback, these qualities will improve their overall health in the future.`,
+The researchers appreciate that not everyone's personal circumstances and environment make it possible to live without worry. However, they believe that if we teach children to develop positive thinking, and to 'bounce back' after a setback, these qualities will improve their overall health in the future.,
         vocab: [
           { en: "blood pressure", ar: "ضغط الدم" },
           { en: "digestive", ar: "الهضم / هضمي" },
@@ -486,7 +485,7 @@ The researchers appreciate that not everyone's personal circumstances and enviro
           { en: "outlook", ar: "نظرة / أفق" },
           { en: "task", ar: "مهمة" },
           { en: "lifestyle", ar: "أسلوب معيشة" }
-        ],
+  ],
         questions: [
           {
             q: "1. Which of the following causes heart diseases?",
@@ -641,7 +640,8 @@ The researchers appreciate that not everyone's personal circumstances and enviro
 
 On touching the metal disk, a strange thing happened. I wasn't in the classroom. I was hovering in the air. I could see the whole town. I was a little nervous, but also pretty excited. I remembered the metal disk. I looked closely at the disk. On it were the words: "Floating through the air, like a balloon, your travels will not stop, until you reach the moon."
 
-Suddenly, I was standing on the moon. It was amazing! It looked different than Earth. No trees, water, wind, or houses. For each step I took I would bounce way up into the air. Every step I took left a huge footprint in the dust. I had to be careful not to jump into a crater. I was bounding over to something in the distance that looked very out of place. When I got there, I realized it was a flag. On the flag were the words: "To go to Earth, close your eyes and think of what you've learned."
+Suddenly, I was standing on the moon. It was amazing! It looked different than Earth. No trees, water, wind, or houses. For each step I took I would bounce way up into the air. Every step I took left a huge footprint in the dust. I had to be careful not to jump into a crater.
+I was bounding over to something in the distance that looked very out of place. When I got there, I realized it was a flag. On the flag were the words: "To go to Earth, close your eyes and think of what you've learned."
 
 I decided to close my eyes and think of the weather and other characteristics of the moon. When I opened my eyes I was sitting in my classroom. Miss Heba was turning on the lights because the video was over. I sat there wondering about what happened. I opened my hand to look at the disk, but it was gone! Was it just a dream?`,
         vocab: [
@@ -802,7 +802,7 @@ I decided to close my eyes and think of the weather and other characteristics of
       {
         id: 5,
         title: "Passage 5: How to Spot a Liar",
-        text: `Psychologist Ekman made a study of how people act when they lie. They don't only want the hearer to believe what they are saying; but also to cover up what they are feeling such as guilt, fear, anger, pain, or even pleasure. By noticing the contradictions between their words and their behavior, Ekman found that he could catch them while lying.
+        text: Psychologist Ekman made a study of how people act when they lie. They don't only want the hearer to believe what they are saying; but also to cover up what they are feeling such as guilt, fear, anger, pain, or even pleasure. By noticing the contradictions between their words and their behavior, Ekman found that he could catch them while lying.
 
 Ekman concludes that there are four kinds of behavior that can give a lie away: the liar's words, voice, body, and face. He says that liars try to control their words and face, since that's what the listener will be observing. So, "lie catchers" should observe the speaker's voice and body signals, which he may forget to control.
 
@@ -810,7 +810,7 @@ A common problem for liars is keeping their story straight. It's known that one 
 
 Liar's voice can also give him away. The voice is harder to control than words. When telling a lie, he may speak loudly or softly, speed up or slow down. This can be due to the emotion he's hiding. However, vocal changes like these aren't always signs of lying.
 
-Somebody's behaviors can be controlled, but others can't. When telling a lie, a person may swallow, sweat, or breathe faster. Nervous gestures often increase when a person is under stress. The liar may use a gesture that contradicts his words, such as nodding "yes" while saying "no."`,
+Somebody's behaviors can be controlled, but others can't. When telling a lie, a person may swallow, sweat, or breathe faster. Nervous gestures often increase when a person is under stress. The liar may use a gesture that contradicts his words, such as nodding "yes" while saying "no.",
         vocab: [
           { en: "guilt", ar: "ذنب" },
           { en: "contradictions", ar: "متناقضات" },
@@ -972,9 +972,9 @@ Somebody's behaviors can be controlled, but others can't. When telling a lie, a 
       {
         id: 6,
         title: "Passage 6: Role Models and Parents",
-        text: `Parents are the most important models for growing children; in fact the first influences on them. First, parents are usually the earliest human contact the child has in the world. In the eyes of the child, parents are by far the most powerful people. They influence the child through nurturing him and providing his needs. In a word, his survival almost solely depends on them. Undoubtedly then, the child looks up to these prime models for the development of his character. Perhaps this explains some of the traditional sayings which suggest that the child takes after the parents.
+        text: Parents are the most important models for growing children; in fact the first influences on them. First, parents are usually the earliest human contact the child has in the world. In the eyes of the child, parents are by far the most powerful people. They influence the child through nurturing him and providing his needs. In a word, his survival almost solely depends on them. Undoubtedly then, the child looks up to these prime models for the development of his character. Perhaps this explains some of the traditional sayings which suggest that the child takes after the parents.
 
-Take the expression, "a chip off the old block", for instance, which is often used to confirm the close similarity between the behaviour of the child and his parents'. It stands to reason that the child naturally picks up his traits, whether good or bad, from his parents. Although the child's parents are his earliest and most important models, he is exposed to many other potent influences: siblings, television, school, celebrities, social media and so on. The walls of boys' rooms, for example, are often covered with the pictures of their idols. But do your children emulate the behaviour of everyone? It is known that they do not imitate all the people they know in equal degrees. It is therefore important to understand the variables that determine the extent to which the child takes up the behaviour displayed by his models.`,
+Take the expression, "a chip off the old block", for instance, which is often used to confirm the close similarity between the behaviour of the child and his parents'. It stands to reason that the child naturally picks up his traits, whether good or bad, from his parents. Although the child's parents are his earliest and most important models, he is exposed to many other potent influences: siblings, television, school, celebrities, social media and so on. The walls of boys' rooms, for example, are often covered with the pictures of their idols. But do your children emulate the behaviour of everyone? It is known that they do not imitate all the people they know in equal degrees. It is therefore important to understand the variables that determine the extent to which the child takes up the behaviour displayed by his models.,
         vocab: [
           { en: "nurturing", ar: "تغذية / رعاية" },
           { en: "solely", ar: "بمفرده / فقط" },
@@ -1141,7 +1141,6 @@ Take the expression, "a chip off the old block", for instance, which is often us
 Have you experienced any vivid dreams? Social media and online forums are full of stories of vivid dreams. Experts are claiming that there is a lot of truth in this phenomenon. People are sleeping longer and this allows more time for dreaming. In addition, the more boring your life is, the more your night time brain activity tries to recompense and the more exciting your dreams become.
 
 Experts decline that dreams can predict events, but they can help us understand our feelings. The events in dreams are symbolic. For example, missing that train might indicate that you are feeling left behind, or that you are nervous. Walking on air shows your feeling of being impossible to be defeated. Dreaming of natural disasters show that you are feeling frightened by events out of your control.
-
 It is worthwhile to try and discover the meaning of your dreams, as this can help you understand your feelings. One way to do this is by association. If you dream about people, ask: what does this person mean to me? If you dream about birds think: do you love them or do they make you nervous? Some people claim they never dream; well, they do, but they just forget.`,
         vocab: [
           { en: "vivid", ar: "واضح / جلي" },
@@ -1212,4 +1211,774 @@ It is worthwhile to try and discover the meaning of your dreams, as this can hel
           {
             q: "4. If someone dreams about walking on the air, this means they ....",
             options: [
-              { ke
+              { key: "a", text: "can be easily beaten." },
+              { key: "b", text: "will travel by plane." },
+              { key: "c", text: "are possible to be defeated." },
+              { key: "d", text: "can't be beaten." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "مذكور صراحة: 'Walking on air shows your feeling of being impossible to be defeated' أي يشعر باستحالة هزيمته وثقته المطلقة (can't be beaten).",
+              distractors: {
+                a: "خطأ: عكس المعنى تماماً، فالرمز يدل على النصر والقوة.",
+                b: "خطأ: تفسير سطحي وحرفي للمشي على الهواء.",
+                c: "خطأ: النص أكد أنه يرى نفسه غير قابل للهزيمة."
+              }
+            }
+          },
+          {
+            q: "5. The main idea of the third paragraph is",
+            options: [
+              { key: "a", text: "dreams can tell us what we feel." },
+              { key: "b", text: "different kinds of dreams." },
+              { key: "c", text: "the bad effects of dreams on our lives." },
+              { key: "d", text: "the meaning of vivid dreams." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "الفقرة الثالثة تركز على الدلالة الرمزية للأحلام وكيف تعكس مشاعرنا ومخاوفنا الدفينة (dreams can tell us what we feel).",
+              distractors: {
+                b: "خطأ: الفقرة لم تقسم الأحلام لأنواع بل حللت رموزها النفسية.",
+                c: "خطأ: لم تتحدث الفقرة عن أضرار للأحلام.",
+                d: "خطأ: تعريف الأحلام الواضحة جاء في الفقرة الأولى."
+              }
+            }
+          },
+          {
+            q: "6. Dreaming of natural disasters reflects that the person",
+            options: [
+              { key: "a", text: "feels capable of doing anything." },
+              { key: "b", text: "might be neglected or left behind." },
+              { key: "c", text: "tried something which is too difficult to achieve." },
+              { key: "d", text: "is feeling frightened of events out of his control." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "مذكور نصاً في ختام الفقرة الثالثة: 'Dreaming of natural disasters show that you are feeling frightened by events out of your control.'",
+              distractors: {
+                a: "خطأ: الكوارث ترمز للعجز والخوف وليس القدرة المطلقة.",
+                b: "خطأ: الشعور بالإهمال يرمز له فوات القطار (missing that train).",
+                c: "خطأ: صعوبة الإنجاز لم ترتبط برمز الكوارث في النص."
+              }
+            }
+          },
+          {
+            q: "7. The purpose of the writer in writing this passage is to",
+            options: [
+              { key: "a", text: "compare two types of sleeping habits." },
+              { key: "b", text: "describe a dream he has had before forgetting it." },
+              { key: "c", text: "inform the readers about dreams; how and why they occur." },
+              { key: "d", text: "persuade the readers to sleep more to experience vivid dreams." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "الهدف مقال معلوماتي يوضح للقراء كيف تحدث الأحلام وأسبابها وطريقة فهم المشاعر من خلال رموزها.",
+              distractors: {
+                a: "خطأ: لا يقارن عادات النوم.",
+                b: "خطأ: الكاتب لا يحكي حلماً شخصياً رآه.",
+                d: "خطأ: لا يدعو الناس لإطالة النوم بل يحلل الظاهرة."
+              }
+            }
+          },
+          {
+            q: "8. Which of the following sentences is correct?",
+            options: [
+              { key: "a", text: "Dreams can help understand people's feelings" },
+              { key: "b", text: "People can usually recall all their dreams accurately." },
+              { key: "c", text: "People can divide the kind of dreams they like to have" },
+              { key: "d", text: "All dreams are nice and realistic." }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "جملة صحيحة تتطابق مع خاتمة النص: 'they can help us understand our feelings'.",
+              distractors: {
+                b: "خطأ: النص أوضح أن الكثيرين ينسون أحلامهم تماماً.",
+                c: "خطأ: لا يمكن للإنسان برمجة واختيار نوع أحلامه مسبقاً.",
+                d: "خطأ: بعض الأحلام كوابيس مخيفة كالكوارث الطبيعية."
+                }
+            }
+          }
+        ]
+      },
+      {
+        id: 8,
+        title: "Passage 8: The Discovery of Penicillin",
+        text: During the First World War, Fleming became an army doctor. When a soldier is wounded in a battle, a piece of his dirty clothing is carried deep into the wound by the bullet. The wound becomes septic and a disease spread through the body. Sometimes an arm or a leg has to be cut off or the man would die, not from the wound but from the poison in his body.
+
+Fleming knew that microbes, which increased quickly, caused a disease. It was possible to kill them by washing the wound in antiseptic; this was done as soon as possible, but the soldiers still died in great numbers. Fleming worked for years, trying to find an antiseptic which would stop microbes from growing; but which wouldn't harm the blood cells, so that the body could fight the disease.
+
+One day he stopped to examine the glass dishes on which he had grown some microbes. In one dish, he was surprised to notice a greenish mould. That meant a tiny seed must have floated on the dish when the lid was off. Fleming made a careful examination. He found out a strange thing. Where the greenish mould was growing, the disease microbes had disappeared. He began to grow enough of the mould to make from it a clear liquid, which tests showed could kill microbes or stop them in both animals and humans without harming their white blood cells. He called the liquid penicillin.,
+        vocab: [
+          { en: "septic", ar: "ملوث / مصاب بالعدوى" },
+          { en: "antiseptic", ar: "معقم / مطهر" },
+          { en: "cut off", ar: "يبتر / يقطع" },
+          { en: "examine", ar: "يفحص" },
+          { en: "greenish mould", ar: "عفن أخضر" },
+          { en: "lid", ar: "غطاء / سدادة" }
+        ],
+        questions: [
+          {
+            q: "1. The disease spread through the body of the wounded soldiers due to......",
+            options: [
+              { key: "a", text: "the bullet" },
+              { key: "b", text: "microbes" },
+              { key: "c", text: "white cells" },
+              { key: "d", text: "antiseptic" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "أوضح النص في الفقرة الثانية: 'Fleming knew that microbes, which increased quickly, caused a disease' فالميكروبات المتكاثرة هي سبب تسمم الجسم.",
+              distractors: {
+                a: "خطأ: الرصاصة وسيلة إدخال التلوث للجرح وليست الكائن الممرض الحي.",
+                c: "خطأ: خلايا الدم البيضاء تكافح العدوى ولا تسببها.",
+                d: "خطأ: المطهر استخدم للعلاج وليس سبباً للعدوى."
+              }
+            }
+          },
+          {
+            q: "2. The underlined word 'septic' in the 1st paragraph means.",
+            options: [
+              { key: "a", text: "safe" },
+              { key: "b", text: "clean" },
+              { key: "c", text: "infected" },
+              { key: "d", text: "healthy" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "كلمة 'septic' تعني متقيح أو مصاب بالعدوى البكتيرية والتلوث (infected).",
+              distractors: {
+                a: "خطأ: safe تعني آمن.",
+                b: "خطأ: clean تعني نظيف.",
+                d: "خطأ: healthy تعني صحي أو سليم."
+              }
+            }
+          },
+          {
+            q: "3. The best title of this passage is",
+            options: [
+              { key: "a", text: "The First World War" },
+              { key: "b", text: "White Blood Cells" },
+              { key: "c", text: "Life of Soldiers" },
+              { key: "d", text: "The Discovery of Penicillin" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "القطعة ترصد قصة جهود العالم فليمنج حتى اكتشافه التاريخي لعقار البنسلين المنقذ للبشرية (The Discovery of Penicillin).",
+    distractors: {
+                a: "خطأ: الحرب العالمية كانت الإطار الزمني لبداية المشكلة فقط.",
+                b: "خطأ: كرات الدم البيضاء عنصر مناعي ذكر في سياق التجارب.",
+                c: "خطأ: حياة الجنود لم تكن المحور العلمي للمقال."
+              }
+            }
+          },
+          {
+            q: "4. We infer from the passage that white cells constitute",
+            options: [
+              { key: "a", text: "the immune system" },
+              { key: "b", text: "the wound" },
+              { key: "c", text: "the mould" },
+              { key: "d", text: "the penicillin" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "نستنتج أن خلايا الدم البيضاء تشكل جهاز المناعة (the immune system)، لأن فليمنج حرص على عدم إيذائها لتتمكن من مكافحة المرض في الجسم.",
+              distractors: {
+                b: "خطأ: الجرح هو مكان الإصابة.",
+                c: "خطأ: العفن فطر خارجي نشأ على طبق البتري.",
+                d: "خطأ: البنسلين هو السائل العلاجي المستخرج."
+              }
+            }
+          },
+          {
+            q: "5. The underlined word pronouns 'it' refers to....",
+            options: [
+              { key: "a", text: "the disease" },
+              { key: "b", text: "the mould" },
+              { key: "c", text: "a strange thing" },
+              { key: "d", text: "a careful examination" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "الضمير في عبارة 'He began to grow enough of the mould to make from it a clear liquid' يعود على العفن الأخضر (the mould).",
+              distractors: {
+                a: "خطأ: المرض لا يُستخلص منه الدواء.",
+                c: "خطأ: الشيء الغريب هو ظاهرة اختفاء الميكروبات.",
+                d: "خطأ: الفحص الدقيق هو عمل فليمنج المخبري."
+              }
+            }
+          },
+          {
+            q: "6. Penicillin is an antiseptic which",
+            options: [
+              { key: "a", text: "destroys white cells." },
+              { key: "b", text: "kills animals and people." },
+              { key: "c", text: "attacks only microbes." },
+              { key: "d", text: "harms white and red cells." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "ميزة البنسلين الفريدة أنه يقضي على الميكروبات فقط دون الإضرار بخلايا الدم البيضاء: 'kill microbes... without harming their white blood cells'.",
+              distractors: {
+                a: "خطأ: هو يحمي ولا يدمر كرات الدم البيضاء.",
+                b: "خطأ: هو عقار شافي للبشر والحيوانات.",
+                d: "خطأ: البنسلين آمن تماماً على خلايا الجسم."
+              }
+            }
+          },
+          {
+            q: "7. According to the text, all the following statements are TRUE except.....",
+            options: [
+              { key: "a", text: "Dirty clothing is carried into the wound by the bullet." },
+              { key: "b", text: "Microbes might be killed by washing the wound in antiseptic acid." },
+              { key: "c", text: "A tiny seed has floated on the dish when the lid was on." },
+              { key: "d", text: "The microbes had disappeared when the mould was growing" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "هذه العبارة خاطئة لأن البذرة/الجرثومة سقطت عندما كان الغطاء مفتوحاً (when the lid was OFF)، وليس مغلقاً (lid was on).",
+              distractors: {
+                a: "عبارة صحيحة ومذكورة في الفقرة الأولى.",
+                b: "عبارة صحيحة حيث كان غسيل الجرح بالمطهر يقتل بعض الميكروبات.",
+                d: "عبارة صحيحة فمكان نمو العفن تلاشت فيه الميكروبات."
+              }
+            }
+          },
+          {
+            q: "8. The purpose of the writer in writing this passage is to",
+            options: [
+              { key: "a", text: "inform us about the First World War and how it ended." },
+              { key: "b", text: "tell us about penicillin and how it was discovered." },
+              { key: "c", text: "advise the soldiers to be careful while fighting in wars." },
+              { key: "d", text: "increase our knowledge about the best way of fighting diseases." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "الهدف هو سرد القصة التاريخية لاكتشاف عقار البنسلين ومراحل فليمنج للوصول إليه (tell us about penicillin and how it was discovered).",
+              distractors: {
+                a: "خطأ: المقال طبي علمي ولا يحلل نهاية الحرب.",
+                c: "خطأ: النص لا يوجه نصائح حربية للجنود.",
+                d: "خطأ: المقال يوثق اكتشافاً محدداً وليس دليلاً طبياً عاماً."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 9,
+        title: "Passage 9: Identical Twins",
+        text: You may take it for granted that you are different from everybody else on Earth. Identical twins are fascinating because they challenge this idea: they are unique people, of course, but they are also similar to each other - and not only in terms of appearance. They often share opinions, habits, and personality traits. Identical twins are rare, happening in about three out of every 1,000 births.
+
+Although there may be tiny differences in physical appearances between identical twins, which allow family and close friends to tell them apart, they have exactly the same DNA. For most scientists, it's the nonphysical similarities between identical twins that are the most interesting. By studying identical twins who've been raised by different families, researchers wanted to determine which personality traits are inherited and which are learned from the environment.
+
+The Minnesota Twin Study provides information about how our environment and genes work together to influence everything from attitudes and abilities to job selection and health. Identical twins Jim Lewis and Jim Springer were only four weeks old when they were taken in by different adoptive families. From there, their lives diverged until they finally met again at the age of 39. The similarities the twins shared not only amazed them, but also amazed researchers. Both twins were given the same name was a coincidence. But there's more. As youngsters, each Jim had a dog named "Toy". Both Jims had at one time held part-time jobs as officers. They drove the same type of car. Both were fingernail biters and suffered from constant headaches.,
+        vocab: [
+          { en: "inherit", ar: "يرث" },
+          { en: "determine", ar: "يحدد / يقرر" },
+          { en: "diverge", ar: "يتفرع / يتشعب" },
+          { en: "coincidence", ar: "مصادفة" },
+          { en: "constant", ar: "ثابت / مستمر" },
+          { en: "nonphysical", ar: "غير جسدي" },
+          { en: "identical twins", ar: "توائم متماثلة" },
+          { en: "personality traits", ar: "صفات شخصية" },
+          { en: "fingernail biters", ar: "من يقومون بقضم الأظافر" }
+        ],
+        questions: [
+          {
+            q: "1. From the passage, we infer that our personality traits",
+            options: [
+              { key: "a", text: "are inherited only" },
+              { key: "b", text: "can be both inherited and learnt" },
+              { key: "c", text: "are learnt only" },
+              { key: "d", text: "are taught at school" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "توضح دراسة مينيسوتا أن البيئة والجينات يعملان معاً لتشكيل الشخصية: 'how our environment and genes work together' أي أنها فطرية موروثة ومكتسبة بالتعلم.",
+              distractors: {
+                a: "خطأ: ليست وراثة فقط بدليل دراسة أثر البيئة (learned from the environment).",
+                c: "خطأ: الجينات لها دور حاسم أثبته تطابق التوأمين المنفصلين.",
+                d: "خطأ: المدرسة جزء بسيط من البيئة وليست العامل الوحيد."
+              }
+            }
+          },
+          {
+            q: "2. The word underlined word 'diverged' means",
+            options: [
+              { key: "a", text: "depart" },
+              { key: "b", text: "reunite" },
+              { key: "c", text: "differ" },
+              { key: "d", text: "joined" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "فعل 'diverge' يعني تفرع وتباعد وسار في مسارين مختلفين تماماً (differ / take separate directions) حيث نشأ كل منهما في عائلة وبيئة مختلفة.",
+              distractors: {
+                a: "خطأ: depart تعني يغادر أو يسافر.",
+                b: "خطأ: reunite تعني يجتمع مجدداً بعد فراق.",
+                d: "خطأ: joined تعني اتحد وهو عكس الافتراق."
+              }
+            }
+          },
+          {
+            q: "3. As adults, the Jim twins",
+            options: [
+              { key: "a", text: "drove different types of cars" },
+              { key: "b", text: "served as part-time officers." },
+              { key: "c", text: "had pets with different names." },
+              { key: "d", text: "suffered from fatal diseases" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "ورد في السطر الأخير: 'Both Jims had at one time held part-time jobs as officers' (عمل كلاهما كضباط بدوام جزئي).",
+              distractors: {
+                a: "خطأ: كانا يقودان نفس نوع السيارة بالضبط (same type of car).",
+                c: "خطأ: كلب كل منهما حمل نفس الاسم 'Toy'.",
+                d: "خطأ: عانيا من الصداع المستمر وليس أمراضاً فتاكة."
+              }
+            }
+          },
+          {
+            q: "4. What information does the Minnesota Twin Study provide?",
+            options: [
+              { key: "a", text: "Identical twins are rare to find." },
+              { key: "b", text: "We all have unique fingerprints" },
+              { key: "c", text: "Physical appearance marks identical twins" },
+              { key: "d", text: "how our environment and genes affect us" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "مذكور نصاً في الفقرة الثالثة: 'The Minnesota Twin Study provides information about how our environment and genes work together to influence everything...'",
+              distractors: {
+                a: "خطأ: ندرة التوائم معلومة إحصائية عامة.",
+                b: "خطأ: بصمات الأصابع لم ترد بالدراسة.",
+                c: "خطأ: الدراسة ركزت على الجوانب غير الجسدية والشخصية."
+              }
+            }
+          },
+          {
+            q: "5. According to the passage, why is it difficult to change our personality?",
+            options: [
+              { key: "a", text: "since we are born with" },
+              { key: "b", text: "due to the environment we live in" },
+              { key: "c", text: "owing to the fact that we share the same family" },
+              { key: "d", text: "because it is part of our character" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "لأن هناك جزءاً جوهرياً منها مشفر بالحمض النووي والجينات التي نولد بها وتلازمنا طوال الحياة (genes we are born with).",
+              distractors: {
+                b: "خطأ: البيئة يمكن تغييرها، لكن الجينات ثابتة.",
+                c: "خطأ: التوأمان نشآ في عائلتين مختلفتين وظلت طباعهما متطابقة.",
+                d: "خطأ: إجابة مكررة لا تفسر الأصل البيولوجي."
+              }
+            }
+          },
+          {
+            q: "6. Which of best summarizes the passage?",
+            options: [
+              { key: "a", text: "It's usual to find identical twins." },
+              { key: "b", text: "Our genes affect our personalities" },
+              { key: "c", text: "Adoptive families can raise identical twins." },
+              { key: "d", text: "Even twins have similarities and differences." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "الرسالة الأساسية للقطعة هي إبراز الأثر القوي للجينات والوراثة في تشكيل سمات الشخصية والخيارات الحياتية.",
+              distractors: {
+                a: "خطأ: ولادة التوائم المتماثلة نادرة (3 في الألف).",
+                c: "خطأ: عائلات التبني كانت وسيلة لإثبات تجربة الانفصال.",
+                d: "خطأ: تلخيص سطحي يغفل الرسالة العلمية عن دور الوراثة."
+              }
+            }
+          },
+          {
+            q: "7. What best expresses the main idea of the passage?",
+            options: [
+              { key: "a", text: "All twins live identical lives." },
+              { key: "b", text: "Some women give birth to identical twins." },
+              { key: "c", text: "Genetics plays a major role in shaping personality." },
+              { key: "d", text: "Personality is largely determined by physical appearance." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "الفكرة الرئيسة: علم الوراثة والجينات يلعبان دوراً رئيسياً في صياغة وتحديد معالم الشخصية (Genetics plays a major role in shaping personality).",
+              distractors: {
+                a: "خطأ: لا يعيش كل التوائم نفس الحياة بالتفصيل.",
+                b: "خطأ: معلومة بيولوجية بديهية وليست فكرة المقال.",
+                d: "خطأ: الشخصية ترتبط بالجينات وليس بالمظهر الخارجي."
+              }
+            }
+          },
+          {
+            q: "8. Which of the following is NOT true about identical twins?",
+            options: [
+              { key: "a", text: "They are unique but similar to each other." },
+              { key: "b", text: "They share habits and personality traits." },
+              { key: "c", text: "They have totally different DNA." },
+              { key: "d", text: "They are less common than non-identical twins." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "هذه العبارة خاطئة تماماً، لأن التوائم المتماثلة تحمل نفس الحمض النووي بالضبط: 'they have exactly the same DNA'.",
+              distractors: {
+                a: "عبارة صحيحة ومذكورة بالسطر الثاني.",
+                b: "عبارة صحيحة يثبتها تشارك العادات مثل قضم الأظافر والطباع.",
+                d: "عبارة صحيحة إحصائياً حيث تبلغ نسبتهم 3 من كل 1000 ولادة فقط."
+              }
+            }
+          }
+        ]
+      },
+      {
+        id: 10,
+        title: "Passage 10: The Mistaken Detective",
+        text: `I left my friend's house shortly after seven. It was still too early for me to have my evening meal, so I walked along the seafront for about an hour until I began to feel hungry. By that time I was not far from a favourite restaurant of mine, where I often went to eat two or three times a week.
+
+I went into the restaurant, which was already crowded, and ordered my meal. While I was waiting for the soup to arrive, I looked around to see if I knew anyone in the restaurant. It was then that I noticed that a man sitting at a corner table near the door kept glancing in my direction, as if he knew me. I certainly did not know him, for I never forget a face. I could see that he was keeping an eye on me. When the waiter brought my soup, the man was clearly puzzled by the familiar way in which the waiter and I addressed each other. He became even more puzzled as time went on and it grew more and more obvious that I was well known in the restaurant. Eventually he got up and went into the kitchen. After a few minutes he came out again, paid his bill and left without another glance in my direction.
+
+When I had finished and was about to pay my bill, I called the owner of the restaurant over and asked him what the man had wanted. The owner said, "That man was a detective. He followed you here because he thought you were a man he was looking for. When he came into the kitchen, he showed me a photograph of the wanted man.
+He certainly looked like you! Of course, since we know you here, I was able to convince him that he had made a mistake." "It is lucky I came to a restaurant where I am known," I said, "Otherwise I might have been arrested!"`,
+        vocab: [
+          { en: "puzzled", ar: "متحير / مرتبك" },
+          { en: "familiar", ar: "مألوف / معتاد" },
+          { en: "glance", ar: "نظرة سريعة" },
+          { en: "call over", ar: "ينادي على" },
+          { en: "keeping an eye on", ar: "يراقب عن كثب" },
+          { en: "convince", ar: "يقنع" },
+          { en: "detective", ar: "متحري / محقق شرطة" },
+          { en: "seafront", ar: "طريق الكورنيش / شاطئ البحر" },
+          { en: "eventually", ar: "في النهاية / أخيراً" },
+          { en: "address", ar: "يخاطب" }
+        ],
+        questions: [
+          {
+            q: "1. The expression 'keeping an eye on' is a synonym for",
+            options: [
+              { key: "a", text: "blinking" },
+              { key: "b", text: "watching" },
+              { key: "c", text: "glancing at" },
+              { key: "d", text: "shedding tears" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "التعبير 'keeping an eye on' يعني يراقب أو يتابع شخصاً باهتمام وحذر (watching).",
+              distractors: {
+                a: "خطأ: blinking تعني يرمش بعينيه.",
+                c: "خطأ: glancing at تعني يلقي نظرة خاطفة عابرة.",
+                d: "خطأ: shedding tears تعني يذرف الدموع."
+              }
+            }
+          },
+          {
+            q: "2. What time do you think the writer went into the restaurant?",
+            options: [
+              { key: "a", text: "at 8 o'clock" },
+              { key: "b", text: "about 8 o'clock" },
+              { key: "c", text: "at 7.30" },
+              { key: "d", text: "after 8 o'clock" }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "غادر منزل صديقه بعد السابعة بقليل (shortly after seven)، ومشى لمدة ساعة تقريباً (for about an hour)، لذا دخل المطعم في حدود الساعة الثامنة تقريباً (about 8 o'clock).",
+              distractors: {
+                a: "خطأ: لم يكن التوقيت بالدقيقة بالضبط بل تقريبياً.",
+                c: "خطأ: السابعة والنصف وقت مبكر لأنه استغرق ساعة مشي كاملة.",
+                d: "خطأ: لم يذكر النص أنه تأخر لما بعد الثامنة بكثير."
+              }
+            }
+          },
+          {
+            q: "3. The writer was ........ at the restaurant.",
+            options: [
+              { key: "a", text: "a regular customer" },
+              { key: "b", text: "a welcomed visitor" },
+              { key: "c", text: "a suspect" },
+              { key: "d", text: "a newcomer" }
+            ],
+            correct: "a",
+            aiAnalysis: {
+              correct: "الكاتب زبون دائم ومعتاد (a regular customer) لأنه يتردد عليه مرتين إلى ثلاث مرات أسبوعياً: 'where I often went to eat two or three times a week'.",
+              distractors: {
+                b: "خطأ: هو زبون دائم وليس مجرد زائر عابر.",
+                c: "خطأ: المحقق اشتبه به لكنه في المطعم زبون معروف.",
+                d: "خطأ: newcomer تعني قادم جديد لأول مرة."
+              }
+            }
+          },
+          {
+            q: "4. If the writer had gone into a different restaurant, he might",
+            options: [
+              { key: "a", text: "have escaped" },
+              { key: "b", text: "missed the dinner" },
+              { key: "c", text: "have been caught" },
+              { key: "d", text: "not have met the detective" }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "يقول الكاتب في ختام القصة: 'Otherwise I might have been arrested!' أي كان يمكن أن يُقبض عليه بالخطأ لولا شهادة صاحب المطعم ببراءته.",
+              distractors: {
+                a: "خطأ: لم يكن مجرماً يحاول الهروب.",
+                b: "خطأ: المشكلة لم تكن في تناول العشاء بل في التوقيف والاعتقال.",
+                d: "خطأ: المحقق كان يتبعه بالفعل من الكورنيش وكان سيوقفه أينما ذهب."
+              }
+            }
+          },
+          {
+            q: "5. What do you think saved the writer's situation at the restaurant?",
+            options: [
+              { key: "a", text: "his reputation" },
+              { key: "b", text: "his twice going to the restaurant" },
+              { key: "c", text: "The detective's poor eyesight" },
+              { key: "d", text: "his knowledge with the owner" }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "معرفته الشخصية بصاحب المطعم هي التي أنقذت الموقف: 'since we know you here, I was able to convince him that he had made a mistake'.",
+              distractors: {
+                a: "خطأ: السمعة العامة لا تكفي لإثبات الهوية أمام صورة شخص مطلوب.",
+                b: "خطأ: التردد مرتين عادة شخصية، لكن النجاة تمت بفضل شهادة المالك.",
+                c: "خطأ: نظر المحقق سليم بدليل التطابق الشديد بين الكاتب والصورة."
+              }
+            }
+          },
+          {
+            q: "6. The detective got confused as",
+            options: [
+              { key: "a", text: "He never forgot a face." },
+              { key: "b", text: "The writer called over the manager." },
+              { key: "c", text: "The waiter was friendly with the writer." },
+              { key: "d", text: "The man in the photo looked like the writer." }
+            ],
+            correct: "c",
+            aiAnalysis: {
+              correct: "ارتبك المحقق واحتار بسبب المعاملة الودية والمألوفة بين النادل والكاتب: 'the man was clearly puzzled by the familiar way in which the waiter and I addressed each other'.",
+              distractors: {
+                a: "خطأ: عدم نسيان الوجوه قالها الكاتب عن نفسه.",
+                b: "خطأ: الكاتب نادى المدير بعد خروج المحقق.",
+                d: "خطأ: الشبه هو سبب الملاحقة منذ البداية وليس سبب الحيرة داخل المطعم."
+              }
+            }
+          },
+          {
+            q: "7. Which of the following do you think a detective is needed to work on?",
+            options: [
+              { key: "a", text: "a student who cheats during an exam." },
+              { key: "b", text: "a bank robbery" },
+              { key: "c", text: "a patient who is going to have an operation." },
+              { key: "d", text: "a passenger who didn't buy a ticket on the train." }
+            ],
+            correct: "b",
+            aiAnalysis: {
+              correct: "عمل المحقق الجنائي يتعامل مع الجرائم الخطيرة مثل السطو على البنوك (a bank robbery).",
+              distractors: {
+                a: "خطأ: غش الامتحان شأن إداري يخص مراقبي الامتحانات.",
+                c: "خطأ: جراحة المريض شأن طبي للأطباء.",
+                d: "خطأ: تذاكر القطار شأن محصل التذاكر."
+              }
+            }
+          },
+          {
+            q: "8. The man at the corner table kept looking at the writer because",
+            options: [
+              { key: "a", text: "he was bored with reading his newspaper." },
+              { key: "b", text: "he was afraid that the writer might run away." },
+              { key: "c", text: "he thought he recognised the writer." },
+              { key: "d", text: "he thought that the writer was someone wanted by the police." }
+            ],
+            correct: "d",
+            aiAnalysis: {
+              correct: "أوضح صاحب المطعم: 'He followed you here because he thought you were a man he was looking for' أي اعتقد أنه شخص مطلوب للعدالة نظراً للشبه التام.",
+              distractors: {
+                a: "خطأ: لم يكن يقرأ جريدة بل كان يراقبه عمداً.",
+                b: "خطأ: لم يظهر الكاتب أي سلوك للهروب.",
+                c: "خطأ: لم يظن أنه من معارفه بل اشتبه في هويته الجنائية."
+              }
+            }
+          }
+        ]
+      }
+    ];
+
+    let currentPassageIndex = 0;
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let score = 0;
+    const welcomeScreen = document.getElementById("welcomeScreen");
+    const startBtn = document.getElementById("startBtn");
+    const passageSelect = document.getElementById("passageSelect");
+    const passageBadge = document.getElementById("passageBadge");
+    const passageText = document.getElementById("passageText");
+    const vocabContainer = document.getElementById("vocabContainer");
+    const currentQDisplay = document.getElementById("currentQDisplay");
+    const progressBar = document.getElementById("progressBar");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    const qText = document.getElementById("qText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const aiExplanation = document.getElementById("aiExplanation");
+    const explanationTitle = document.getElementById("explanationTitle");
+    const explanationBody = document.getElementById("explanationBody");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function startTraining() {
+      welcomeScreen.style.setProperty('display', 'none', 'important');
+    }
+
+    startBtn.addEventListener('click', startTraining);
+
+    function initDropdown() {
+      passageSelect.innerHTML = passagesData.map((p, idx) => 
+        <option value="${idx}">القطعة ${p.id}: ${p.title.split(':')[1] || ''}</option>
+      ).join("");
+      passageSelect.addEventListener('change', (e) => loadPassage(parseInt(e.target.value)));
+    }
+
+    function loadPassage(idx) {
+      currentPassageIndex = idx;
+      currentQuestionIndex = 0;
+      userAnswers = {};
+      score = 0;
+      scoreDisplay.textContent = "0";
+
+      const p = passagesData[idx];
+      passageBadge.textContent = القطعة ${p.id};
+      passageText.innerHTML = p.text.split('\n\n').map(par => <p class="mb-3">${par}</p>).join("");
+
+      vocabContainer.innerHTML = p.vocab.map(v => 
+        <div class="bg-indigo-50/60 p-2 rounded-lg border border-indigo-100 flex flex-col">
+          <span class="font-bold text-indigo-900 en-text text-xs">${v.en}</span>
+          <span class="text-slate-600 text-[11px] font-medium mt-0.5">${v.ar}</span>
+        </div>
+      ).join("");
+
+      loadQuestion(0);
+    }
+
+    function loadQuestion(qIdx) {
+      currentQuestionIndex = qIdx;
+      const p = passagesData[currentPassageIndex];
+      const qData = p.questions[qIdx];
+
+      currentQDisplay.textContent = ${qIdx + 1} من ${p.questions.length};
+      const progressPercent = ((qIdx + 1) / p.questions.length) * 100;
+      progressBar.style.width = ${progressPercent}%;
+
+      qText.textContent = qData.q;
+
+      const answeredState = userAnswers[qIdx];
+
+      optionsContainer.innerHTML = qData.options.map(opt => {
+        let btnClasses = "w-full text-left p-3.5 rounded-xl border border-slate-200 text-sm font-medium transition duration-150 flex items-center justify-between";
+        
+        if (!answeredState) {
+          btnClasses += " hover:bg-indigo-50/70 hover:border-indigo-300 active:scale-[0.99] bg-white";
+        } else {
+          if (opt.key === qData.correct) {
+            btnClasses += " bg-emerald-50 border-emerald-500 text-emerald-900 font-bold";
+          } else if (opt.key === answeredState.chosenKey) {
+            btnClasses += " bg-rose-50 border-rose-400 text-rose-900 font-bold";
+          } else {
+            btnClasses += " bg-slate-50 border-slate-200 text-slate-400 opacity-60";
+          }
+        }
+
+        const disabledAttr = answeredState ? "disabled" : "";
+
+        return `
+          <button onclick="handleSelectOption('${opt.key}')" ${disabledAttr} class="${btnClasses}">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs font-bold text-slate-500 ${answeredState && opt.key === qData.correct ? 'border-emerald-500 text-emerald-600 bg-emerald-100' : ''}">
+              ${opt.key.toUpperCase()}
+              </span>
+              <span>${opt.text}</span>
+            </div>
+            ${answeredState && opt.key === qData.correct ? '<span class="text-emerald-600 font-bold text-xs">✓ صحيح</span>' : ''}
+            ${answeredState && opt.key === answeredState.chosenKey && !answeredState.isCorrect ? '<span class="text-rose-500 font-bold text-xs">✕ اختيارك</span>' : ''}
+          </button>
+        ;
+      }).join("");
+
+      if (answeredState) {
+        showExplanation(qData, answeredState);
+      } else {
+        aiExplanation.style.display = "none";
+      }
+
+      prevBtn.disabled = qIdx === 0;
+      nextBtn.textContent = qIdx === p.questions.length - 1 ? "إنهاء القطعة" : "التالي";
+    }
+
+    function handleSelectOption(chosenKey) {
+      const p = passagesData[currentPassageIndex];
+      const qData = p.questions[currentQuestionIndex];
+      const isCorrect = chosenKey === qData.correct;
+
+      if (isCorrect) {
+        score++;
+        scoreDisplay.textContent = score;
+      }
+
+      userAnswers[currentQuestionIndex] = {
+        chosenKey,
+        isCorrect
+      };
+
+      loadQuestion(currentQuestionIndex);
+    }
+
+    function showExplanation(qData, answerState) {
+      aiExplanation.style.display = "block";
+
+      if (answerState.isCorrect) {
+        aiExplanation.className = "mt-5 p-4 rounded-xl border border-emerald-200 bg-emerald-50/50";
+        explanationTitle.className = "text-sm font-bold text-emerald-800";
+        explanationTitle.innerHTML = "✨ إجابة صحيحة وموفقة!";
+      } else {
+        aiExplanation.className = "mt-5 p-4 rounded-xl border border-amber-200 bg-amber-50/50";
+        explanationTitle.className = "text-sm font-bold text-amber-900";
+        explanationTitle.innerHTML = "⚠️ إجابة غير دقيقة! إليك التفنيد الصحيح:";
+      }
+
+      let distractorsHtml = "";
+      for (const [key, reason] of Object.entries(qData.aiAnalysis.distractors)) {
+        const isUserMistake = (key === answerState.chosenKey);
+        distractorsHtml += 
+          <div class="p-2 rounded-lg text-[11px] ${isUserMistake ? 'bg-rose-100/70 border border-rose-300 font-semibold text-rose-900' : 'bg-white/80 text-slate-600 border border-slate-200'}">
+            <span class="font-bold uppercase tracking-wide">الخيار (${key}):</span> ${reason}
+            ${isUserMistake ? ' <span class="text-rose-600 font-bold underline">(هذا هو الخيار الذي حددته)</span>' : ''}
+          </div>
+        ;
+      }
+
+      explanationBody.innerHTML = 
+        <div class="p-2.5 rounded-lg bg-white border border-slate-200">
+          <p class="text-emerald-800 font-bold mb-1 text-xs">💡 لماذا الاختيار (${qData.correct.toUpperCase()}) هو الصحيح؟</p>
+          <p class="text-slate-700 text-xs">${qData.aiAnalysis.correct}</p>
+        </div>
+        <div class="mt-2 space-y-1.5">
+          <p class="font-bold text-slate-700 text-xs">تحليل الخيارات الخاطئة ولماذا استبعدناها:</p>
+          ${distractorsHtml}
+        </div>
+      ;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentQuestionIndex > 0) loadQuestion(currentQuestionIndex - 1);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const p = passagesData[currentPassageIndex];
+      if (currentQuestionIndex < p.questions.length - 1) {
+        loadQuestion(currentQuestionIndex + 1);
+      } else {
+        alert(أحسنت! أكملت حل القطعة.\nالدرجة: ${score} من ${p.questions.length}`);
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initDropdown();
+      loadPassage(0);
+    });
+  </script>
+</body>
+</html>
