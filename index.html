@@ -1824,13 +1824,17 @@ let currentPassageIndex = 0;
       localStorage.setItem("passages_progress", JSON.stringify(data));
     }
 
-    function initDropdown() {
+   function initDropdown() {
       const sel = document.getElementById("passageSelect");
       const savedData = getStoredData();
+      const currentVal = currentPassageIndex;
+      
       sel.innerHTML = passagesData.map((p, idx) => {
         const isDone = savedData[p.id] && Object.keys(savedData[p.id].answers).length === p.questions.length;
         return `<option value="${idx}">${isDone ? '✓ ' : ''}القطعة ${p.id}: ${p.title.split(':')[1] || ''}</option>`;
       }).join("");
+
+      sel.value = currentVal;
     }
 
     function loadPassage(idx) {
@@ -1976,24 +1980,22 @@ let currentPassageIndex = 0;
         </div>
       `;
     }
-// مسح إجابات القطعة الحالية فقط دون التأثير على باقي القطع
+// مسح إجابات القطعة الحالية فقط والحفاظ التام على باقي القطع
     function resetCurrentPassage() {
       const p = passagesData[currentPassageIndex];
       const confirmReset = confirm(`هل تريد مسح إجابات (القطعة ${p.id}) وإعادة حلها من البداية؟`);
       
       if (confirmReset) {
         const data = getStoredData();
-        // حذف بيانات هذه القطعة فقط من الذاكرة
         delete data[p.id];
         localStorage.setItem("passages_progress", JSON.stringify(data));
 
-        // تصفير الإجابات الحالية في الشاشة
         userAnswers = {};
         score = 0;
         document.getElementById("scoreDisplay").textContent = "0";
 
-        // تحديث القائمة المنسدلة وإعادة تحميل السؤال الأول
         initDropdown();
+        document.getElementById("passageSelect").value = currentPassageIndex;
         loadQuestion(0);
       }
     }
