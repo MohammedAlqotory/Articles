@@ -126,14 +126,20 @@
           <div id="explanationBody" class="text-xs leading-relaxed text-slate-700 space-y-2"></div>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
-          <button id="prevBtn" type="button" onclick="prevQuestion()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
-            السابق
-          </button>
-          <button id="nextBtn" type="button" onclick="nextQuestion()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
-            التالي
-          </button>
-        </div>
+       <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center gap-2">
+  <button id="prevBtn" type="button" onclick="prevQuestion()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed">
+    السابق
+  </button>
+  
+  <!-- زر إعادة حل القطعة الحالية فقط -->
+  <button type="button" onclick="resetCurrentPassage()" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-bold rounded-lg transition active:scale-95 flex items-center gap-1 cursor-pointer">
+    🔄 إعادة حل القطعة
+  </button>
+
+  <button id="nextBtn" type="button" onclick="nextQuestion()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg shadow-sm transition">
+    التالي
+  </button>
+</div>
       </div>
     </section>
 
@@ -1970,7 +1976,27 @@ let currentPassageIndex = 0;
         </div>
       `;
     }
+// مسح إجابات القطعة الحالية فقط دون التأثير على باقي القطع
+    function resetCurrentPassage() {
+      const p = passagesData[currentPassageIndex];
+      const confirmReset = confirm(`هل تريد مسح إجابات (القطعة ${p.id}) وإعادة حلها من البداية؟`);
+      
+      if (confirmReset) {
+        const data = getStoredData();
+        // حذف بيانات هذه القطعة فقط من الذاكرة
+        delete data[p.id];
+        localStorage.setItem("passages_progress", JSON.stringify(data));
 
+        // تصفير الإجابات الحالية في الشاشة
+        userAnswers = {};
+        score = 0;
+        document.getElementById("scoreDisplay").textContent = "0";
+
+        // تحديث القائمة المنسدلة وإعادة تحميل السؤال الأول
+        initDropdown();
+        loadQuestion(0);
+      }
+    }
     function prevQuestion() {
       if (currentQuestionIndex > 0) loadQuestion(currentQuestionIndex - 1);
     }
