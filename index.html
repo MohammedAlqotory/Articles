@@ -1797,26 +1797,53 @@ When I had finished and was about to pay my bill, I called the owner of the rest
       }
     ];
 
-    let currentPassageIndex = 0;
+let currentPassageIndex = 0;
     let currentQuestionIndex = 0;
     let userAnswers = {};
     let score = 0;
 
+    // استرجاع الإجابات المحفوظة من ذاكرة المتصفح
+    function getStoredData() {
+      const saved = localStorage.getItem("passages_progress");
+      return saved ? JSON.parse(saved) : {};
+    }
+
+    // حفظ الإجابات والدرجة تلقائياً
+    function saveProgress(passageId, answers, currentScore) {
+      const data = getStoredData();
+      data[passageId] = {
+        answers: answers,
+        score: currentScore
+      };
+      localStorage.setItem("passages_progress", JSON.stringify(data));
+    }
+
     function initDropdown() {
       const sel = document.getElementById("passageSelect");
-      sel.innerHTML = passagesData.map((p, idx) => `
-        <option value="${idx}">القطعة ${p.id}: ${p.title.split(':')[1] || ''}</option>
-      `).join("");
+      const savedData = getStoredData();
+      sel.innerHTML = passagesData.map((p, idx) => {
+        const isDone = savedData[p.id] && Object.keys(savedData[p.id].answers).length === p.questions.length;
+        return `<option value="${idx}">${isDone ? '✓ ' : ''}القطعة ${p.id}: ${p.title.split(':')[1] || ''}</option>`;
+      }).join("");
     }
 
     function loadPassage(idx) {
       currentPassageIndex = parseInt(idx);
       currentQuestionIndex = 0;
-      userAnswers = {};
-      score = 0;
-      document.getElementById("scoreDisplay").textContent = "0";
 
       const p = passagesData[currentPassageIndex];
+      const savedData = getStoredData();
+
+      // استرجاع الحلول القديمة إن وجدت للقطعة
+      if (savedData[p.id]) {
+        userAnswers = savedData[p.id].answers || {};
+        score = savedData[p.id].score || 0;
+      } else {
+        userAnswers = {};
+        score = 0;
+      }
+
+      document.getElementById("scoreDisplay").textContent = score;
       document.getElementById("passageBadge").textContent = `القطعة ${p.id}`;
       document.getElementById("passageText").innerHTML = p.text.split("\n\n").map(par => `<p class="mb-3">${par}</p>`).join("");
 
@@ -1897,6 +1924,10 @@ When I had finished and was about to pay my bill, I called the owner of the rest
       }
 
       userAnswers[currentQuestionIndex] = { chosenKey, isCorrect };
+
+      // حفظ الحل في ذاكرة المتصفح فور الضغط
+      saveProgress(p.id, userAnswers, score);
+      initDropdown();
       loadQuestion(currentQuestionIndex);
     }
 
@@ -1952,7 +1983,6 @@ When I had finished and was about to pay my bill, I called the owner of the rest
         alert(`أحسنت! أكملت حل القطعة.\nالدرجة: ${score} من ${p.questions.length}`);
       }
     }
-
     window.addEventListener("DOMContentLoaded", () => {
       initDropdown();
       loadPassage(0);
